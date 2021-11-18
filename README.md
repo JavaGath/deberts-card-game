@@ -27,11 +27,7 @@ deberts
 ### Actual ToDo's:
 
 1. ~~Run project using docker~~
-2. Create deck model
-    1. ~~Card~~
-    2. ~~CardDeck~~
-    3. ~~Hand~~
-    4. Trump
+2. ~~Create deck model~~
 3. Create game model
     1. Player
     2. Round
