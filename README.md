@@ -30,7 +30,7 @@ deberts
 2. Create deck model
     1. ~~Card~~
     2. ~~CardDeck~~
-    3. Hand
+    3. ~~Hand~~
     4. Trump
 3. Create game model
     1. Player
