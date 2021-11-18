@@ -29,14 +29,42 @@
     </dependency>
 
     <dependency>
-      <artifactId>lombok</artifactId>
-      <groupId>org.projectlombok</groupId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-devtools</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>slf4j-api</artifactId>
+      <groupId>org.slf4j</groupId>
+      <version>${slf4jVersion}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
+      <groupId>org.assertj</groupId>
+      <version>2.2.0</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
   <description>backend</description>
@@ -55,6 +83,7 @@
     <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <slf4jVersion>1.7.32</slf4jVersion>
   </properties>
 
   <version>0.0.1-SNAPSHOT</version>
