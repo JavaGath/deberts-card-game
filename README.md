@@ -29,8 +29,8 @@ deberts
 1. ~~Run project using docker~~
 2. Create deck model
     1. ~~Card~~
-    2. Hand
-    3. Deck
+    2. ~~CardDeck~~
+    3. Hand
     4. Trump
 3. Create game model
     1. Player
