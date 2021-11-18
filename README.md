@@ -28,7 +28,7 @@ deberts
 
 1. ~~Run project using docker~~
 2. Create deck model
-    1. Card
+    1. ~~Card~~
     2. Hand
     3. Deck
     4. Trump
@@ -41,3 +41,6 @@ deberts
     2. Next dealer is a winner of the last round
     3. Each player gets 6 cards
     4. Trump generation
+5. Trade Phase
+6. Combination Phase
+7. Action Phase
