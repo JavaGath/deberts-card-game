@@ -1,4 +1,7 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
+
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 
 /**
  * An entity that contains a {@code Trump}. {@code Trump} is in the deck package but doesn't belong

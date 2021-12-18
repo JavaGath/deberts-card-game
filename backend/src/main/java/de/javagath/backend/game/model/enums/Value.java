@@ -1,4 +1,4 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.enums;
 
 /**
  * Represents all relevant face values of cards.

@@ -1,5 +1,6 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
 
+import de.javagath.backend.game.model.enums.Owner;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

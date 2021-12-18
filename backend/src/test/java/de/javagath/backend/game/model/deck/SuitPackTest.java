@@ -1,8 +1,10 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

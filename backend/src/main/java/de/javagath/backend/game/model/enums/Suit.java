@@ -1,4 +1,4 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version 1.0
  * @since 1.0
  */
-enum Suit {
+public enum Suit {
   @JsonProperty("diamonds")
   DIAMONDS(),
   @JsonProperty("hearts")

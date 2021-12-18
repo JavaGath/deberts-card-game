@@ -1,8 +1,11 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

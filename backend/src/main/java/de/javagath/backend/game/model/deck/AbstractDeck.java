@@ -1,5 +1,8 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
 
+import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 import java.lang.invoke.MethodHandles;
 import java.util.EnumMap;
 import java.util.LinkedList;

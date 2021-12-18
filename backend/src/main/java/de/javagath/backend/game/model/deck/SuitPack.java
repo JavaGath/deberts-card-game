@@ -1,12 +1,12 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
 
+import de.javagath.backend.game.model.enums.Value;
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,7 +135,7 @@ class SuitPack {
    */
   public Card dealRandomCard() {
     if (!isEmpty()) {
-      List<Card> activeCards = cards.stream().filter(Card::isActive).collect(Collectors.toList());
+      List<Card> activeCards = cards.stream().filter(Card::isActive).toList();
       var cardIndex = new Random().nextInt(activeCards.size());
       var deckCard = activeCards.get(cardIndex);
       var dealtCard = Card.newInstance(activeCards.get(cardIndex));
