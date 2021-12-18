@@ -1,4 +1,7 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
+
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 
 /**
  * Represents a single card. Each card has a {@code Suit} and {@code Value}. Active parameter
@@ -8,7 +11,7 @@ package de.javagath.backend.game.model;
  * @version 1.0
  * @since 1.0
  */
-public class Card {
+public class Card implements Challengable<Card> {
 
   private final Suit suit;
   private final Value value;
@@ -104,7 +107,7 @@ public class Card {
   }
 
   /**
-   * Returns points of the {@code Card} depends from the trump suit.
+   * Returns points of the {@code Card} depends on the trump suit.
    *
    * @param trump suit
    * @return points
@@ -112,6 +115,20 @@ public class Card {
   public int getPoints(Suit trump) {
     return value.getPoints(suit.equals(trump));
   }
+
+  @Override
+  public int compareToSuit(Card object, Suit trump) {
+    if (suit.equals(object.getSuit())) {
+      int compareResult =
+          Integer.compare(getPoints(trump), object.getPoints(trump));
+      if (compareResult == 0) {
+        compareResult = getValue().compareTo(object.getValue());
+      }
+      return compareResult;
+    }
+    return object.getSuit().equals(trump) ? -1 : 1;
+  }
+
 
   @Override
   public int hashCode() {
@@ -142,5 +159,14 @@ public class Card {
   @Override
   public String toString() {
     return "Card{" + "suit=" + suit + ", value=" + value + ", active=" + active + '}';
+  }
+
+  /**
+   * Returns position of the card {@code FaceValue}.
+   *
+   * @return position of the {@code FaceValue}
+   */
+  public int getPosition() {
+    return value.getPosition();
   }
 }
