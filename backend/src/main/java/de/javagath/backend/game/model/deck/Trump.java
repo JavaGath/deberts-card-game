@@ -2,6 +2,7 @@ package de.javagath.backend.game.model.deck;
 
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.model.enums.Value;
+import java.util.Objects;
 
 /**
  * An entity that contains a {@code Trump}. {@code Trump} is in the deck package but doesn't belong
@@ -111,7 +112,7 @@ public class Trump {
 
   @Override
   public int hashCode() {
-    int result = card.hashCode();
+    int result = card != null ? card.hashCode() : 0;
     result = 31 * result + (nativeTrump ? 1 : 0);
     return result;
   }
@@ -121,14 +122,16 @@ public class Trump {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Trump trump)) {
+    if (!(o instanceof Trump)) {
       return false;
     }
+
+    Trump trump = (Trump) o;
 
     if (nativeTrump != trump.nativeTrump) {
       return false;
     }
-    return card.equals(trump.card);
+    return Objects.equals(card, trump.card);
   }
 
   @Override

@@ -148,4 +148,54 @@ public class Challenge<T extends Challengable<T>> {
   private boolean isComplete() {
     return attacker != null && defender != null && attackerValue != null && defenderValue != null;
   }
+
+  @Override
+  public int hashCode() {
+    int result = getAttacker() != null ? getAttacker().hashCode() : 0;
+    result = 31 * result + (getDefender() != null ? getDefender().hashCode() : 0);
+    result = 31 * result + (getAttackerValue() != null ? getAttackerValue().hashCode() : 0);
+    result = 31 * result + (getDefenderValue() != null ? getDefenderValue().hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Challenge)) {
+      return false;
+    }
+
+    Challenge<?> challenge = (Challenge<?>) o;
+
+    if (getAttacker() != challenge.getAttacker()) {
+      return false;
+    }
+    if (getDefender() != challenge.getDefender()) {
+      return false;
+    }
+    if (getAttackerValue() != null
+        ? !getAttackerValue().equals(challenge.getAttackerValue())
+        : challenge.getAttackerValue() != null) {
+      return false;
+    }
+    return getDefenderValue() != null
+        ? getDefenderValue().equals(challenge.getDefenderValue())
+        : challenge.getDefenderValue() == null;
+  }
+
+  @Override
+  public String toString() {
+    return "Challenge{"
+        + "attacker="
+        + attacker
+        + ", defender="
+        + defender
+        + ", attackerValue="
+        + attackerValue
+        + ", defenderValue="
+        + defenderValue
+        + '}';
+  }
 }

@@ -105,8 +105,8 @@ public abstract class AbstractDeck implements Deck {
   @Override
   public int hashCode() {
     int result = fullSuits.hashCode();
-    result = 31 * result + suitMap.hashCode();
-    result = 31 * result + getOwner().hashCode();
+    result = 31 * result + (suitMap != null ? suitMap.hashCode() : 0);
+    result = 31 * result + (getOwner() != null ? getOwner().hashCode() : 0);
     return result;
   }
 
@@ -115,14 +115,16 @@ public abstract class AbstractDeck implements Deck {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof AbstractDeck that)) {
+    if (!(o instanceof AbstractDeck)) {
       return false;
     }
+
+    AbstractDeck that = (AbstractDeck) o;
 
     if (!fullSuits.equals(that.fullSuits)) {
       return false;
     }
-    if (!suitMap.equals(that.suitMap)) {
+    if (suitMap != null ? !suitMap.equals(that.suitMap) : that.suitMap != null) {
       return false;
     }
     return getOwner() == that.getOwner();

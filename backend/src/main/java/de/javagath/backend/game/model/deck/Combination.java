@@ -117,9 +117,11 @@ public class Combination implements Challengable<Combination> {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Combination that)) {
+    if (!(o instanceof Combination)) {
       return false;
     }
+
+    Combination that = (Combination) o;
 
     if (getPlayer() != that.getPlayer()) {
       return false;
@@ -187,19 +189,16 @@ public class Combination implements Challengable<Combination> {
       if (this == o) {
         return true;
       }
-      if (!(o instanceof CardCombination that)) {
+      if (!(o instanceof CardCombination)) {
         return false;
       }
+
+      CardCombination that = (CardCombination) o;
 
       if (!Objects.equals(combinationCards, that.combinationCards)) {
         return false;
       }
       return getSuit() == that.getSuit();
-    }
-
-    @Override
-    public String toString() {
-      return "CardCombination{" + "combinationCards=" + combinationCards + ", suit=" + suit + '}';
     }
   }
 }

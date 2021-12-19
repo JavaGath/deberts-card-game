@@ -164,7 +164,7 @@ class SuitPack {
   @Override
   public int hashCode() {
     int result = cards.hashCode();
-    result = 31 * result + getActiveCards();
+    result = 31 * result + activeCars;
     return result;
   }
 
@@ -173,11 +173,13 @@ class SuitPack {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof SuitPack suitPack)) {
+    if (!(o instanceof SuitPack)) {
       return false;
     }
 
-    if (getActiveCards() != suitPack.getActiveCards()) {
+    SuitPack suitPack = (SuitPack) o;
+
+    if (activeCars != suitPack.activeCars) {
       return false;
     }
     return cards.equals(suitPack.cards);

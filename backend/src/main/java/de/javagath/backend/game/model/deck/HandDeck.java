@@ -62,7 +62,6 @@ public class HandDeck extends AbstractDeck {
     int result = super.hashCode();
     result = 31 * result + maxCardsNumber;
     result = 31 * result + containedCards;
-    result = 31 * result + owner.hashCode();
     return result;
   }
 
@@ -71,17 +70,19 @@ public class HandDeck extends AbstractDeck {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof HandDeck handDeck)) {
+    if (!(o instanceof HandDeck)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
 
+    HandDeck handDeck = (HandDeck) o;
+
     if (maxCardsNumber != handDeck.maxCardsNumber) {
       return false;
     }
-    return containedCards == handDeck.containedCards && owner == handDeck.getOwner();
+    return containedCards == handDeck.containedCards;
   }
 
   @Override
