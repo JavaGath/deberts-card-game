@@ -41,7 +41,7 @@ public class Combination implements Challengable<Combination> {
    *
    * @param combination set of cards
    */
-  public void addCombination(Set<Card> combination) {
+  public void add(Set<Card> combination) {
     TreeSet<Card> orderedCombination = new TreeSet<>(combination);
     if (CombinationName.isCombination(orderedCombination)) {
       Card combinationCard = orderedCombination.first();
@@ -54,12 +54,16 @@ public class Combination implements Challengable<Combination> {
   }
 
   /**
-   * Returns the highest {@code Combination} of all combinations of the player.
+   * Returns the highest {@code Combination} of all combinations of the player in the form of Set.
    *
    * @param trump trump {@code Suit}
    * @return highest {@code Combination}
    */
-  public CardCombination getHighestCombination(Suit trump) {
+  public Set<Card> getHighestCombination(Suit trump) {
+    return getHighestCardCombination(trump).getCards();
+  }
+
+  private CardCombination getHighestCardCombination(Suit trump) {
     CardCombination result = Objects.requireNonNull(combinationList.get(0));
     for (CardCombination combination : combinationList) {
       int compareValue = result.compareTo(combination);
@@ -94,14 +98,20 @@ public class Combination implements Challengable<Combination> {
 
   @Override
   public int compareToSuit(Combination object, Suit trump) {
-    CardCombination thisCombination = getHighestCombination(trump);
-    CardCombination otherCombination = object.getHighestCombination(trump);
+    CardCombination thisCombination = getHighestCardCombination(trump);
+    CardCombination otherCombination = object.getHighestCardCombination(trump);
+    int compareValue = thisCombination.compareTo(otherCombination);
 
-    if (!thisCombination.isSameSuit(otherCombination.getSuit())
-        && otherCombination.isSameSuit(trump)) {
+    if (compareValue != 0) {
+      return compareValue;
+    }
+
+    if (thisCombination.isSameSuit(trump)) {
+      return 1;
+    } else if (otherCombination.isSameSuit(trump)) {
       return -1;
     } else {
-      return thisCombination.compareTo(otherCombination);
+      return compareValue;
     }
   }
 
@@ -149,6 +159,10 @@ public class Combination implements Challengable<Combination> {
 
     public boolean isSameSuit(Suit suit) {
       return this.suit.equals(suit);
+    }
+
+    public Set<Card> getCards() {
+      return combinationCards;
     }
 
     @Override
@@ -199,6 +213,11 @@ public class Combination implements Challengable<Combination> {
         return false;
       }
       return getSuit() == that.getSuit();
+    }
+
+    @Override
+    public String toString() {
+      return "CardCombination{" + "combinationCards=" + combinationCards + ", suit=" + suit + '}';
     }
   }
 }

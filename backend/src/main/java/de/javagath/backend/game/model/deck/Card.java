@@ -11,8 +11,7 @@ import de.javagath.backend.game.model.enums.Value;
  * @version 1.0
  * @since 1.0
  */
-public class Card implements Challengable<Card> {
-
+public class Card implements Challengable<Card>, Comparable<Card> {
   private final Suit suit;
   private final Value value;
   private boolean active;
@@ -119,46 +118,13 @@ public class Card implements Challengable<Card> {
   @Override
   public int compareToSuit(Card object, Suit trump) {
     if (suit.equals(object.getSuit())) {
-      int compareResult =
-          Integer.compare(getPoints(trump), object.getPoints(trump));
+      int compareResult = Integer.compare(getPoints(trump), object.getPoints(trump));
       if (compareResult == 0) {
         compareResult = getValue().compareTo(object.getValue());
       }
       return compareResult;
     }
     return object.getSuit().equals(trump) ? -1 : 1;
-  }
-
-
-  @Override
-  public int hashCode() {
-    int result = getSuit().hashCode();
-    result = 31 * result + value.hashCode();
-    result = 31 * result + (isActive() ? 1 : 0);
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Card card)) {
-      return false;
-    }
-
-    if (isActive() != card.isActive()) {
-      return false;
-    }
-    if (getSuit() != card.getSuit()) {
-      return false;
-    }
-    return value == card.value;
-  }
-
-  @Override
-  public String toString() {
-    return "Card{" + "suit=" + suit + ", value=" + value + ", active=" + active + '}';
   }
 
   /**
@@ -168,5 +134,44 @@ public class Card implements Challengable<Card> {
    */
   public int getPosition() {
     return value.getPosition();
+  }
+
+  @Override
+  public int compareTo(Card o) {
+    return this.getValue().compareTo(o.getValue());
+  }
+
+  @Override
+  public int hashCode() {
+    int result = getSuit() != null ? getSuit().hashCode() : 0;
+    result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+    result = 31 * result + (isActive() ? 1 : 0);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Card)) {
+      return false;
+    }
+
+    Card card = (Card) o;
+
+    if (isActive() != card.isActive()) {
+      return false;
+    }
+
+    if (getSuit() != card.getSuit()) {
+      return false;
+    }
+    return getValue() == card.getValue();
+  }
+
+  @Override
+  public String toString() {
+    return "Card{" + "suit=" + suit + ", value=" + value + ", active=" + active + '}';
   }
 }
