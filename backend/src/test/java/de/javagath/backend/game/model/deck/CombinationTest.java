@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class CombinationTest {
 
   @Test
-  void addCombination_notValidCombination_throwIllegalArgumentException() {
+  void add_notValidCombination_throwIllegalArgumentException() {
     Owner player = Owner.PLAYER;
     Combination combination = Combination.newInstance(player);
     Set<Card> badCombination = new HashSet<>();
@@ -25,6 +25,40 @@ public class CombinationTest {
     badCombination.add(Card.newInstance(Suit.CLUBS, Value.SEVEN));
 
     assertThatThrownBy(() -> combination.add(badCombination))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void add_emptyCombination_throwIllegalArgumentException() {
+    Owner player = Owner.PLAYER;
+    Combination combination = Combination.newInstance(player);
+    Set<Card> emptyCombination = new HashSet<>();
+
+    assertThatThrownBy(() -> combination.add(emptyCombination))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void add_notBella_throwIllegalArgumentException() {
+    Owner player = Owner.PLAYER;
+    Combination combination = Combination.newInstance(player);
+    Set<Card> notBellaCombination = new HashSet<>();
+    notBellaCombination.add(Card.newInstance(Suit.DIAMONDS, Value.EIGHT));
+    notBellaCombination.add(Card.newInstance(Suit.DIAMONDS, Value.SEVEN));
+
+    assertThatThrownBy(() -> combination.add(notBellaCombination))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void add_notValidSequence_throwIllegalArgumentException() {
+    Owner player = Owner.PLAYER;
+    Combination combination = Combination.newInstance(player);
+    Set<Card> notValidSequence = new HashSet<>();
+    notValidSequence.add(Card.newInstance(Suit.DIAMONDS, Value.EIGHT));
+    notValidSequence.add(Card.newInstance(Suit.DIAMONDS, Value.ACE));
+
+    assertThatThrownBy(() -> combination.add(notValidSequence))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
