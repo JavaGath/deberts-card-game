@@ -1,4 +1,7 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
+
+import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.Suit;
 
 /**
  * An entity that contains and manages cards. Cards are grouped by {@code SuitPack}. All suits are
@@ -59,7 +62,6 @@ public class HandDeck extends AbstractDeck {
     int result = super.hashCode();
     result = 31 * result + maxCardsNumber;
     result = 31 * result + containedCards;
-    result = 31 * result + owner.hashCode();
     return result;
   }
 
@@ -68,17 +70,19 @@ public class HandDeck extends AbstractDeck {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof HandDeck handDeck)) {
+    if (!(o instanceof HandDeck)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
 
+    HandDeck handDeck = (HandDeck) o;
+
     if (maxCardsNumber != handDeck.maxCardsNumber) {
       return false;
     }
-    return containedCards == handDeck.containedCards && owner == handDeck.getOwner();
+    return containedCards == handDeck.containedCards;
   }
 
   @Override

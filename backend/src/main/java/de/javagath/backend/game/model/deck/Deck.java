@@ -1,7 +1,11 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
+
+import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 
 /**
- * An abstract class to contain and manage cards.
+ * The interface for card management.
  *
  * @author Ievgenii Izrailtenko
  * @version 1.0
