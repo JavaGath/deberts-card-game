@@ -28,18 +28,18 @@ deberts
 
 1. ~~Run project using docker~~
 2. ~~Create deck model~~
-3. Game model
+3. Container for DB
+4. Kubernetes' infrastructure for Java-App and DB
+5. Game model
     1. Player
     2. Round
     3. Party
-4. Deal cads
+6. Deal cads
     1. First dealer appear to be chosen randomly
     2. Next dealer is a winner of the last round
     3. Each player gets 6 cards
     4. Trump generation
-5. Container for DB
-6. DB-Schema
-7. Kubernetes' infrastructure for Java-App and DB
+7. DB-Schema
 8. Trade Phase
 9. Combination Phase
 10. Action Phase
