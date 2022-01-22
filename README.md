@@ -70,7 +70,7 @@ kubectl get pods -o wide
 3. Infrastructure
     1. ~~Separate containers for jar and db~~
     2. ~~Connection to db~~
-    3. Kubernetes' infrastructure for Java-App and DB
+    3. ~~Kubernetes' infrastructure for Java-App and DB~~
     4. Volume for db
     5. Good practices for docker and kubernetes
 4. Game model

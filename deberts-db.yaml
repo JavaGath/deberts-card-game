@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: deberts-db
+  labels:
+    name: deberts-db
+spec:
+  ## NodePort to connect to the cluster from outside
+  type: NodePort
+  ports:
+    - port: 5432
+      nodePort: 31000
+  selector:
+    app: deberts-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deberts-db
+spec:
+  selector:
+    matchLabels:
+      app: deberts-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: deberts-db
+    spec:
+      containers:
+        - image: deberts-db:latest
+          # for local image
+          imagePullPolicy: IfNotPresent
+          name: deberts-db
+          env:
+            # Use secret in real usage
+            - name: POSTGRES_PASSWORD
+              value: docker
+          ports:
+            - containerPort: 5432
+              name: deberts-db
+

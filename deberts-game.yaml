@@ -1,0 +1,37 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: deberts-game
+  labels:
+    name: deberts-game
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 32000
+  selector:
+    app: deberts-game
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deberts-game
+spec:
+  selector:
+    matchLabels:
+      app: deberts-game
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: deberts-game
+    spec:
+      containers:
+        - image: deberts-game:latest
+          # for local image
+          imagePullPolicy: IfNotPresent
+          name: deberts-game
+          ports:
+            - containerPort: 8080
+              name: deberts-game
