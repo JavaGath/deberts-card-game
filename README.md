@@ -86,3 +86,5 @@ kubectl get pods -o wide
 7. Trade Phase
 8. Combination Phase
 9. Action Phase
+
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=javagath)](https://github.com/anuraghazra/github-readme-stats)
