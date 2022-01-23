@@ -1,4 +1,8 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.model.deck;
+
+import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 
 /**
  * An entity that contains and manages cards. Cards are grouped by {@code SuitPack}. All suits are
