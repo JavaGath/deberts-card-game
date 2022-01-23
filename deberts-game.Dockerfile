@@ -7,9 +7,11 @@ WORKDIR /deberts-card-game
 # Is everything ok?
 RUN ls
 
+
 # Run Maven build
 RUN mvn clean install
 
+RUN echo "jar is ready"
 # Remove the build container and just use the build artifact
 FROM openjdk:17-jdk
 
