@@ -52,7 +52,7 @@ You need to create a network for DNS container-names
 docker network create javagath
 docker run --net javagath --name deberts-db -e POSTGRES_PASSWORD=docker -p 5432:5432 -d deberts-db
 docker run --net javagath  --name deberts-game -p 8080:8080 -d deberts-game 
-docker network inspectr javagath
+docker network inspect javagath
 ```
 
 #### In Kubernetes
