@@ -18,6 +18,7 @@ kind: Deployment
 metadata:
   name: deberts-db
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: deberts-db
