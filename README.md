@@ -67,16 +67,8 @@ kubectl get pods -o wide
 
 1. ~~Run project using docker~~
 2. ~~Create deck model~~
-3. Infrastructure
-    1. ~~Separate containers for jar and db~~
-    2. ~~Connection to db~~
-    3. ~~Kubernetes' infrastructure for Java-App and DB~~
-    4. Volume for db
-    5. Good practices for docker and kubernetes
-4. Game model
-    1. Player
-    2. Round
-    3. Party
+3. ~~Infrastructure~~
+4. ~~Game model~~
 5. Deal cads
     1. First dealer appear to be chosen randomly
     2. Next dealer is a winner of the last round
