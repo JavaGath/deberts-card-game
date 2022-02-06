@@ -93,6 +93,24 @@ class Round {
   }
 
   /**
+   * Returns a total number of cards in the hands of players.
+   *
+   * @return total card number
+   */
+  int countHandCards() {
+    return information.countHandCards();
+  }
+
+  /**
+   * Returns the trump suit.
+   *
+   * @return trump suit
+   */
+  Suit getTrumpSuit() {
+    return information.getTrumpSuit();
+  }
+
+  /**
    * Switches current {@code Round} to the next {@code Phase}. Each {@code Round} has three
    * different {@code Phases}: trade, combination and action.
    *

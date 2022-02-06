@@ -46,9 +46,4 @@ public class Trade implements Phase {
   public void playTrump(Suit suit, Owner picker) {
     information.playTrump(suit, picker);
   }
-
-  @Override
-  public RoundInformation getInformation() {
-    return information;
-  }
 }

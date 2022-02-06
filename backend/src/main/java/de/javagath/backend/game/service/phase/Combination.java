@@ -34,6 +34,8 @@ public class Combination implements Phase {
 
   @Override
   public void decideChallenge(Challenge<?> challenge) {
+    // if(challenge.getAttackerValue() instanceof )
+
     Owner winner = challenge.getWinner(information.getTrumpSuit());
     Integer points = challenge.getPoints(information.getTrumpSuit());
     information.addCombinationPoints(winner, points);
@@ -47,10 +49,5 @@ public class Combination implements Phase {
   @Override
   public void playTrump(Suit suit, Owner picker) {
     throw new IllegalStateException("The trump can not be played in the current phase");
-  }
-
-  @Override
-  public RoundInformation getInformation() {
-    return information;
   }
 }

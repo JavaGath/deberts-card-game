@@ -54,11 +54,6 @@ public class Action implements Phase {
     throw new IllegalStateException("The trump can not be played in the current phase");
   }
 
-  @Override
-  public RoundInformation getInformation() {
-    return information;
-  }
-
   private void removePlayedCards(Card attacker, Card defender) {
     Deck playerDeck = information.getPlayerDeck();
     Deck botDeck = information.getBotDeck();
