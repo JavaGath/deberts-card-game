@@ -34,7 +34,6 @@ public class Combination implements Phase {
 
   @Override
   public void decideChallenge(Challenge<?> challenge) {
-    // if(challenge.getAttackerValue() instanceof )
 
     Owner winner = challenge.getWinner(information.getTrumpSuit());
     Integer points = challenge.getPoints(information.getTrumpSuit());
