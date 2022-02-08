@@ -2,11 +2,16 @@ package de.javagath.backend.game.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.javagath.backend.game.model.deck.Card;
 import de.javagath.backend.game.model.deck.Challenge;
 import de.javagath.backend.game.model.deck.Combination;
+import de.javagath.backend.game.model.deck.Deck;
+import de.javagath.backend.game.model.deck.DeckFactory;
+import de.javagath.backend.game.model.deck.Trump;
 import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.PhaseName;
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.model.enums.Value;
 import java.util.Set;
@@ -80,8 +85,40 @@ public class RoundTest {
 
   @Test
   void newInstance_newPartyWithTheFirstRound_trumpDeckIsNotEmpty() {
-    Round round = Round.newInstance(Owner.NOBODY);
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
 
-    assertThat(round.getTrumpSuit()).isInstanceOf(Suit.class);
+    Round round = Round.newInstance(newInformation, PhaseName.COMBO);
+    round.switchTrumpSeven();
+
+    assertTrue(playerDeck.contains(trumpCard));
   }
 }

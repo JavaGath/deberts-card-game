@@ -283,8 +283,8 @@ public class RoundInformation {
     }
   }
 
+  /** Deals cards to the handdecks based on the current phase. */
   public void dealCards() {
-    PhaseName name = phaseName;
     for (int i = 0; i < phaseName.getValue(); i++) {
       playerDeck.addCard(cardDeck.dealRandomCard());
       botDeck.addCard(cardDeck.dealRandomCard());

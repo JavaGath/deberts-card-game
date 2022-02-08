@@ -6,6 +6,7 @@ import de.javagath.backend.game.model.deck.Deck;
 import de.javagath.backend.game.model.deck.DeckFactory;
 import de.javagath.backend.game.model.deck.Trump;
 import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.PhaseName;
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.service.phase.Phase;
 import de.javagath.backend.game.service.phase.PhaseFactory;
@@ -25,46 +26,11 @@ import de.javagath.backend.game.service.phase.PhaseFactory;
  * @since 1.0
  */
 class Round {
-  private final Owner beginner;
-  private final RoundInformation information;
+  private RoundInformation information;
   private Phase phase;
 
-  private Round() {
-    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
-    Card trumpCard = cardDeck.dealRandomCard();
-    int ownerValue = (Math.random() <= 0.5) ? 1 : 2;
-    beginner = Owner.getOwnerByValue(ownerValue);
-    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
-    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
-    information =
-        RoundInformation.builder()
-            .cardDeck(cardDeck)
-            .playerDeck(playerDeck)
-            .botDeck(botDeck)
-            .trumpDeck(Trump.newInstance(trumpCard))
-            .turn(beginner)
-            .trumpChangePossible(true)
-            .build();
-
-    phase = PhaseFactory.getPhase(information);
-  }
-
-  private Round(Owner beginner) {
-    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
-    Card trumpCard = cardDeck.dealRandomCard();
-    this.beginner = beginner;
-    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
-    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
-    information =
-        RoundInformation.builder()
-            .cardDeck(cardDeck)
-            .playerDeck(playerDeck)
-            .botDeck(botDeck)
-            .trumpDeck(Trump.newInstance(trumpCard))
-            .turn(this.beginner)
-            .trumpChangePossible(true)
-            .build();
-
+  private Round(RoundInformation information) {
+    this.information = information;
     phase = PhaseFactory.getPhase(information);
   }
 
@@ -76,11 +42,40 @@ class Round {
    * @return new {@code Round} object
    */
   static Round newInstance(Owner beginner) {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealRandomCard();
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
     if (beginner.equals(Owner.BOT) || beginner.equals(Owner.PLAYER)) {
-      return new Round(beginner);
+      newInformation.setTurn(beginner);
     } else {
-      return new Round();
+      int ownerValue = (Math.random() <= 0.5) ? 1 : 2;
+      Owner newBeginner = Owner.getOwnerByValue(ownerValue);
+      newInformation.setTurn(newBeginner);
     }
+    return new Round(newInformation);
+  }
+
+  static Round newInstance(RoundInformation information, PhaseName phase) {
+    Round round = newInstance(Owner.NOBODY);
+    if (phase == PhaseName.COMBO) {
+      round.switchPhase();
+      round.setInformation(information);
+    } else if (phase == PhaseName.ACTION) {
+      round.switchPhase();
+      round.switchPhase();
+      round.setInformation(information);
+    }
+    return round;
   }
 
   /**
@@ -90,6 +85,17 @@ class Round {
    */
   RoundInformation getInformation() {
     return information;
+  }
+
+  /**
+   * Sets new {@code RoundInformation} for the round and its current phase. The main Idea of this
+   * method is to improve unit-testing for the project.
+   *
+   * @param information new round information
+   */
+  void setInformation(RoundInformation information) {
+    this.information = information;
+    this.phase.setInformation(information);
   }
 
   /**

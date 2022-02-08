@@ -3,6 +3,7 @@ package de.javagath.backend.game.service.phase;
 import de.javagath.backend.game.model.deck.Challenge;
 import de.javagath.backend.game.model.enums.Owner;
 import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.service.RoundInformation;
 
 /**
  * The interface for the state entity to help the class {@code Round} to manage different phases in
@@ -41,4 +42,11 @@ public interface Phase {
    * @param picker player who chose the trump in the trade phase
    */
   void playTrump(Suit suit, Owner picker);
+
+  /**
+   * Sets new {@code RoundInformation} for the current phase.
+   *
+   * @param information new round information
+   */
+  void setInformation(RoundInformation information);
 }

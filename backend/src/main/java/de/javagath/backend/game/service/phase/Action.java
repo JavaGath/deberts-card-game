@@ -21,7 +21,7 @@ import de.javagath.backend.game.service.RoundInformation;
  */
 public class Action implements Phase {
 
-  private final RoundInformation information;
+  private RoundInformation information;
 
   Action(RoundInformation information) {
     this.information = information;
@@ -52,6 +52,11 @@ public class Action implements Phase {
   @Override
   public void playTrump(Suit suit, Owner picker) {
     throw new IllegalStateException("The trump can not be played in the current phase");
+  }
+
+  @Override
+  public void setInformation(RoundInformation information) {
+    this.information = information;
   }
 
   private void removePlayedCards(Card attacker, Card defender) {

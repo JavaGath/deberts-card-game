@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SuppressWarnings({"javadoc"})
 @SpringBootTest
-public class CombinationTest {
+public class ComboTest {
 
   @Test
   void add_notValidCombination_throwIllegalArgumentException() {
