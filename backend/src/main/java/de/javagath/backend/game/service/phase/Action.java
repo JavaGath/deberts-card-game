@@ -59,6 +59,16 @@ public class Action implements Phase {
     this.information = information;
   }
 
+  @Override
+  public boolean isSevenSwitchable() {
+    return false;
+  }
+
+  @Override
+  public boolean isFourSevenResettable() {
+    return false;
+  }
+
   private void removePlayedCards(Card attacker, Card defender) {
     Deck playerDeck = information.getPlayerDeck();
     Deck botDeck = information.getBotDeck();

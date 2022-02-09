@@ -42,40 +42,50 @@ class Round {
    * @return new {@code Round} object
    */
   static Round newInstance(Owner beginner) {
-    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
-    Card trumpCard = cardDeck.dealRandomCard();
-    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
-    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
-    RoundInformation newInformation =
-        RoundInformation.builder()
-            .cardDeck(cardDeck)
-            .playerDeck(playerDeck)
-            .botDeck(botDeck)
-            .trumpDeck(Trump.newInstance(trumpCard))
-            .trumpChangePossible(true)
-            .build();
-
+    RoundInformation newInformation = createDefaultInformation();
     if (beginner.equals(Owner.BOT) || beginner.equals(Owner.PLAYER)) {
       newInformation.setTurn(beginner);
+      newInformation.setBeginner(beginner);
     } else {
       int ownerValue = (Math.random() <= 0.5) ? 1 : 2;
       Owner newBeginner = Owner.getOwnerByValue(ownerValue);
       newInformation.setTurn(newBeginner);
+      newInformation.setBeginner(newBeginner);
     }
     return new Round(newInformation);
   }
 
+  /**
+   * Factory method to create a new {@code Round} based on RoundInformation and wished phase.
+   *
+   * @param information Round information
+   * @param phase wised phase for the round
+   * @return new {@code Round} object
+   */
   static Round newInstance(RoundInformation information, PhaseName phase) {
     Round round = newInstance(Owner.NOBODY);
     if (phase == PhaseName.COMBO) {
       round.switchPhase();
-      round.setInformation(information);
     } else if (phase == PhaseName.ACTION) {
       round.switchPhase();
       round.switchPhase();
-      round.setInformation(information);
     }
+    round.setInformation(information);
     return round;
+  }
+
+  private static RoundInformation createDefaultInformation() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealRandomCard();
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    return RoundInformation.builder()
+        .cardDeck(cardDeck)
+        .playerDeck(playerDeck)
+        .botDeck(botDeck)
+        .trumpDeck(Trump.newInstance(trumpCard))
+        .trumpChangePossible(true)
+        .build();
   }
 
   /**
@@ -95,7 +105,35 @@ class Round {
    */
   void setInformation(RoundInformation information) {
     this.information = information;
-    this.phase.setInformation(information);
+    phase.setInformation(information);
+  }
+
+  /** Resets current round if one player has for sevens. */
+  void resetCauseFourSevens() {
+    if (phase.isFourSevenResettable()) {
+      information = createDefaultInformation();
+      phase = PhaseFactory.getPhase(information);
+    } else {
+      throw new IllegalStateException("Round could not be resetted in the current state");
+    }
+  }
+
+  /**
+   * Returns true if it is possible to switch a trump seven.
+   *
+   * @return true if possible
+   */
+  boolean isSevenSwitchable() {
+    return phase.isSevenSwitchable();
+  }
+
+  /**
+   * Returns true if it is possible to reset a round because of four sevens in the hand.
+   *
+   * @return true if player has four sevens in the hand
+   */
+  boolean isFourSevenResettable() {
+    return phase.isFourSevenResettable();
   }
 
   /**

@@ -54,4 +54,14 @@ public class Combo implements Phase {
   public void setInformation(RoundInformation information) {
     this.information = information;
   }
+
+  @Override
+  public boolean isSevenSwitchable() {
+    return information.isSevenSwitchable();
+  }
+
+  @Override
+  public boolean isFourSevenResettable() {
+    return information.isFourSevenResettable();
+  }
 }

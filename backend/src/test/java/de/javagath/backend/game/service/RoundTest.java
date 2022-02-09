@@ -2,6 +2,7 @@ package de.javagath.backend.game.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.javagath.backend.game.model.deck.Card;
@@ -58,10 +59,17 @@ public class RoundTest {
   }
 
   @Test
-  void switchTrumpSeven_switchTrumpSevenInTheRound_throwsIllegalStateException() {
+  void switchTrumpSeven_switchTrumpSevenInTheTradePhase_throwsIllegalStateException() {
     Round round = Round.newInstance(Owner.NOBODY);
 
     assertThatThrownBy(round::switchTrumpSeven).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void isSevenSwitchable_newRoundInTheTradePhase_false() {
+    Round round = Round.newInstance(Owner.NOBODY);
+
+    assertFalse(round.isSevenSwitchable());
   }
 
   @Test
@@ -84,7 +92,115 @@ public class RoundTest {
   }
 
   @Test
-  void newInstance_newPartyWithTheFirstRound_trumpDeckIsNotEmpty() {
+  void switchTrumpSeven_newRoundActionPhaseBotFourSevens_throwsIllegalStateException() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+
+    assertThatThrownBy(round::switchTrumpSeven).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void isSevenSwitchable_newRoundActionPhaseBotFourSevens_false() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+
+    assertThat(round.isSevenSwitchable()).isEqualTo(Boolean.FALSE);
+  }
+
+  @Test
+  void isFourSevenResettable_newRoundTradePhaseBotFourSevens_true() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.TRADE);
+
+    assertThat(round.isFourSevenResettable()).isEqualTo(Boolean.TRUE);
+  }
+
+  @Test
+  void switchTrumpSeven_newRoundComboPhasePlayerFourSevens_switchOk() {
     Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
     Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
     Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
@@ -120,5 +236,81 @@ public class RoundTest {
     round.switchTrumpSeven();
 
     assertTrue(playerDeck.contains(trumpCard));
+  }
+
+  @Test
+  void isSevenSwitchable_newRoundComboPhasePlayerFourSevens_true() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.COMBO);
+
+    assertTrue(round.isSevenSwitchable());
+  }
+
+  @Test
+  void isFourSevenResettable_newRoundComboPhasePlayerFourSevens_true() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.COMBO);
+
+    assertTrue(round.isFourSevenResettable());
   }
 }

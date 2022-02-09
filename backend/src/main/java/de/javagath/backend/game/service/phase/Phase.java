@@ -49,4 +49,18 @@ public interface Phase {
    * @param information new round information
    */
   void setInformation(RoundInformation information);
+
+  /**
+   * Returns true if it is possible to switch a trump seven.
+   *
+   * @return true if possible
+   */
+  boolean isSevenSwitchable();
+
+  /**
+   * Returns true if it is possible to reset a round because of four sevens in the hand.
+   *
+   * @return true if player has four sevens in the hand
+   */
+  boolean isFourSevenResettable();
 }

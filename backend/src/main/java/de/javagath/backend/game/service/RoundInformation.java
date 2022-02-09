@@ -28,6 +28,7 @@ public class RoundInformation {
   private Deck playerDeck;
   private Deck botDeck;
   private boolean trumpChangePossible;
+  @Builder.Default private Owner beginner = Owner.PLAYER;
   @Builder.Default private Owner turn = Owner.PLAYER;
   private Owner trumpPicker;
   @Builder.Default private PhaseName phaseName = PhaseName.TRADE;
@@ -179,6 +180,24 @@ public class RoundInformation {
   }
 
   /**
+   * Returns beginner of the Round.
+   *
+   * @return round beginner
+   */
+  public Owner getBeginner() {
+    return beginner;
+  }
+
+  /**
+   * Sets beginner of the round.
+   *
+   * @param beginner whose begin the round
+   */
+  public void setBeginner(Owner beginner) {
+    this.beginner = beginner;
+  }
+
+  /**
    * Returns the trump suit.
    *
    * @return trump suit
@@ -283,11 +302,37 @@ public class RoundInformation {
     }
   }
 
-  /** Deals cards to the handdecks based on the current phase. */
+  /** Deals cards to the HandDecks based on the current phase. */
   public void dealCards() {
     for (int i = 0; i < phaseName.getValue(); i++) {
       playerDeck.addCard(cardDeck.dealRandomCard());
       botDeck.addCard(cardDeck.dealRandomCard());
     }
+  }
+
+  /**
+   * Returns true if it is possible to switch a trump seven.
+   *
+   * @return true if possible
+   */
+  public boolean isSevenSwitchable() {
+    return trumpDeck.isNative() && contains(trumpDeck.getSuit(), Value.SEVEN);
+  }
+
+  /**
+   * Returns true if it is possible to reset a round because of four sevens in the hand.
+   *
+   * @return true if player has four sevens in the hand
+   */
+  public boolean isFourSevenResettable() {
+
+    return (playerDeck.contains(Suit.CLUBS, Value.SEVEN)
+            && playerDeck.contains(Suit.DIAMONDS, Value.SEVEN)
+            && playerDeck.contains(Suit.HEARTS, Value.SEVEN)
+            && playerDeck.contains(Suit.SPADES, Value.SEVEN))
+        || (botDeck.contains(Suit.CLUBS, Value.SEVEN)
+            && botDeck.contains(Suit.DIAMONDS, Value.SEVEN)
+            && botDeck.contains(Suit.HEARTS, Value.SEVEN)
+            && botDeck.contains(Suit.SPADES, Value.SEVEN));
   }
 }

@@ -51,4 +51,14 @@ public class Trade implements Phase {
   public void setInformation(RoundInformation information) {
     this.information = information;
   }
+
+  @Override
+  public boolean isSevenSwitchable() {
+    return false;
+  }
+
+  @Override
+  public boolean isFourSevenResettable() {
+    return information.isFourSevenResettable();
+  }
 }
