@@ -28,6 +28,9 @@ public class Trade implements Phase {
 
   @Override
   public Phase switchPhase() {
+    if (information.isTrumpChangePossible()) {
+      throw new IllegalStateException("Trump should be chosen to switch the phase");
+    }
     information.setPhaseName(PhaseName.COMBO);
     return new Combo(information);
   }

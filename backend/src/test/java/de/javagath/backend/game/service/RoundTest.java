@@ -34,7 +34,7 @@ public class RoundTest {
   }
 
   @Test
-  void decideChallenge_inCombinationPhase_throwsIllegalArgumentException() {
+  void decideChallenge_inComboPhaseAttackerHasTertz_challengeGives20Points() {
     Round round = Round.newInstance(Owner.NOBODY);
     int expectedPoints = 20;
     Owner attacker = Owner.PLAYER;
@@ -52,10 +52,75 @@ public class RoundTest {
     challenge.setAttackerValue(attackerCombination);
     challenge.setDefenderValue(defenderCombination);
 
+    round.playTrump(Suit.HEARTS, Owner.PLAYER);
     round.switchPhase();
     round.decideChallenge(challenge);
 
-    assertThat(challenge.getPoints(Suit.SPADES)).isEqualTo(expectedPoints);
+    assertThat(round.getCombinationPoints(attacker)).isEqualTo(expectedPoints);
+  }
+
+  @Test
+  void decideChallenge_inActionPhasePlayerDiamondAceBotDiamondTenLastCard_playerWins31Points() {
+    int expectedPoints = 31;
+    Owner attacker = Owner.PLAYER;
+    Owner defender = Owner.BOT;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(defender);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.TEN));
+    Deck playerDeck = DeckFactory.getDeck(attacker);
+    playerDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.ACE));
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(false)
+            .build();
+    Challenge<Card> challenge = new Challenge<>();
+    challenge.setAttacker(attacker);
+    challenge.setDefender(defender);
+    challenge.setAttackerValue(Card.newInstance(Suit.DIAMONDS, Value.ACE));
+    challenge.setDefenderValue(Card.newInstance(Suit.DIAMONDS, Value.TEN));
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+    round.decideChallenge(challenge);
+
+    assertThat(round.getPoints(attacker)).isEqualTo(expectedPoints);
+  }
+
+  @Test
+  void decideChallenge_inActionPhasePlayerSpadesKingBotSpadesTenNotLastCard_botWins14Points() {
+    int expectedPoints = 14;
+    Owner attacker = Owner.BOT;
+    Owner defender = Owner.PLAYER;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(attacker);
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.TEN));
+    Deck playerDeck = DeckFactory.getDeck(defender);
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.KING));
+    botDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(false)
+            .build();
+    Challenge<Card> challenge = new Challenge<>();
+    challenge.setAttacker(attacker);
+    challenge.setDefender(defender);
+    challenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.TEN));
+    challenge.setDefenderValue(Card.newInstance(Suit.SPADES, Value.KING));
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+    round.decideChallenge(challenge);
+
+    assertThat(round.getPoints(attacker)).isEqualTo(expectedPoints);
   }
 
   @Test
@@ -89,6 +154,47 @@ public class RoundTest {
     Round round = Round.newInstance(Owner.NOBODY);
 
     assertThat(round.countHandCards()).isEqualTo(expectedCardNumber);
+  }
+
+  @Test
+  void switchPhase_inActionPhase_throwsIllegalStateException() {
+    Round round = Round.newInstance(Owner.NOBODY);
+
+    round.playTrump(Suit.HEARTS, Owner.PLAYER);
+    round.switchPhase();
+    round.switchPhase();
+
+    assertThatThrownBy(round::switchPhase).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void switchPhase_inTradePhaseNotPickedTrump_throwsIllegalStateException() {
+    Round round = Round.newInstance(Owner.NOBODY);
+
+    assertThatThrownBy(round::switchPhase).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void playTrump_inActionPhase_throwsIllegalStateException() {
+    Round round = Round.newInstance(Owner.NOBODY);
+
+    round.playTrump(Suit.HEARTS, Owner.PLAYER);
+    round.switchPhase();
+    round.switchPhase();
+
+    assertThatThrownBy(() -> round.playTrump(Suit.HEARTS, Owner.PLAYER))
+        .isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void isFourSevenResettable_inActionPhase_false() {
+    Round round = Round.newInstance(Owner.NOBODY);
+
+    round.playTrump(Suit.HEARTS, Owner.PLAYER);
+    round.switchPhase();
+    round.switchPhase();
+
+    assertFalse(round.isFourSevenResettable());
   }
 
   @Test

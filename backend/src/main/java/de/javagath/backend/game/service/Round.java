@@ -56,7 +56,8 @@ class Round {
   }
 
   /**
-   * Factory method to create a new {@code Round} based on RoundInformation and wished phase.
+   * Factory method to create a new {@code Round} based on RoundInformation and wished phase. Method
+   * to support the unit-testing.
    *
    * @param information Round information
    * @param phase wised phase for the round
@@ -65,8 +66,10 @@ class Round {
   static Round newInstance(RoundInformation information, PhaseName phase) {
     Round round = newInstance(Owner.NOBODY);
     if (phase == PhaseName.COMBO) {
+      round.playTrump(Suit.HEARTS, Owner.PLAYER);
       round.switchPhase();
     } else if (phase == PhaseName.ACTION) {
+      round.playTrump(Suit.HEARTS, Owner.PLAYER);
       round.switchPhase();
       round.switchPhase();
     }
@@ -217,6 +220,26 @@ class Round {
       int totalPoints = score.getPoints(Owner.PLAYER) + score.getPoints(Owner.BOT);
       score.addPoints(winner, totalPoints);
     }
+  }
+
+  /**
+   * Returns combinations points of the player.
+   *
+   * @param owner player
+   * @return combination points
+   */
+  int getCombinationPoints(Owner owner) {
+    return information.getCombinationPoints(owner);
+  }
+
+  /**
+   * Returns points of the player.
+   *
+   * @param owner player
+   * @return points
+   */
+  public int getPoints(Owner owner) {
+    return information.getPoints(owner);
   }
 
   /**

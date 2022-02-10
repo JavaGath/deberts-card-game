@@ -54,6 +54,26 @@ public class RoundInformation {
   }
 
   /**
+   * Returns combinations points of the player.
+   *
+   * @param owner player
+   * @return combination points
+   */
+  public int getCombinationPoints(Owner owner) {
+    return combinationScore.getPoints(owner);
+  }
+
+  /**
+   * Returns points of the player.
+   *
+   * @param owner player
+   * @return points
+   */
+  public int getPoints(Owner owner) {
+    return score.getPoints(owner);
+  }
+
+  /**
    * Adds combination points to the score for the player.
    *
    * @param owner player (deck owner)
@@ -260,6 +280,15 @@ public class RoundInformation {
     }
     trumpDeck.setTradedTrump(newTrumpCard);
     this.trumpPicker = trumpPicker;
+  }
+
+  /**
+   * Returns true if trump is not picked and can be chosen.
+   *
+   * @return true if trump is not picked
+   */
+  public boolean isTrumpChangePossible() {
+    return trumpChangePossible;
   }
 
   /**

@@ -102,9 +102,9 @@ public class Combination implements Challengable<Combination> {
     if (this.isEmpty() && object.isEmpty()) {
       return 0;
     } else if (this.isEmpty() && !object.isEmpty()) {
-      return 1;
-    } else if (!this.isEmpty() && object.isEmpty()) {
       return -1;
+    } else if (!this.isEmpty() && object.isEmpty()) {
+      return 1;
     }
     CardCombination thisCombination = getHighestCardCombination(trump);
     CardCombination otherCombination = object.getHighestCardCombination(trump);
