@@ -124,6 +124,91 @@ public class RoundTest {
   }
 
   @Test
+  void sumUp_playerPickedOwnTrumpLost_botGetsAllPointsWins14Points() {
+    int expectedPoints = 27;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Card tradedTrump = cardDeck.dealCard(Suit.HEARTS, Value.JACK);
+    Trump trumpDeck = Trump.newInstance(trumpCard);
+    trumpDeck.setTradedTrump(tradedTrump);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.TEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.QUEEN));
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.KING));
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(trumpDeck)
+            .trumpPicker(Owner.PLAYER)
+            .trumpChangePossible(false)
+            .build();
+    Challenge<Card> firstChallenge = new Challenge<>();
+    firstChallenge.setAttacker(Owner.BOT);
+    firstChallenge.setDefender(Owner.PLAYER);
+    firstChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.QUEEN));
+    firstChallenge.setDefenderValue(Card.newInstance(Suit.SPADES, Value.KING));
+    Challenge<Card> secondChallenge = new Challenge<>();
+    secondChallenge.setAttacker(Owner.PLAYER);
+    secondChallenge.setDefender(Owner.BOT);
+    secondChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.SEVEN));
+    secondChallenge.setDefenderValue(Card.newInstance(Suit.SPADES, Value.TEN));
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+    round.decideChallenge(firstChallenge);
+    round.decideChallenge(secondChallenge);
+    round.sumUp();
+
+    assertThat(round.getPoints(Owner.BOT)).isEqualTo(expectedPoints);
+  }
+
+  @Test
+  void sumUp_playerPickedOwnTrumpEqualPoints_playerAndBotHave10Points() {
+    int expectedPoints = 10;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Card tradedTrump = cardDeck.dealCard(Suit.HEARTS, Value.JACK);
+    Trump trumpDeck = Trump.newInstance(trumpCard);
+    trumpDeck.setTradedTrump(tradedTrump);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.TEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.NINE));
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.EIGHT));
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(trumpDeck)
+            .trumpPicker(Owner.PLAYER)
+            .trumpChangePossible(false)
+            .build();
+    Challenge<Card> firstChallenge = new Challenge<>();
+    firstChallenge.setAttacker(Owner.BOT);
+    firstChallenge.setDefender(Owner.PLAYER);
+    firstChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.TEN));
+    firstChallenge.setDefenderValue(Card.newInstance(Suit.SPADES, Value.NINE));
+    Challenge<Card> secondChallenge = new Challenge<>();
+    secondChallenge.setAttacker(Owner.PLAYER);
+    secondChallenge.setDefender(Owner.BOT);
+    secondChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.EIGHT));
+    secondChallenge.setDefenderValue(Card.newInstance(Suit.SPADES, Value.SEVEN));
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+    round.decideChallenge(firstChallenge);
+    round.decideChallenge(secondChallenge);
+    round.sumUp();
+
+    assertThat(round.getPoints(Owner.BOT)).isEqualTo(expectedPoints);
+    assertThat(round.getPoints(Owner.PLAYER)).isEqualTo(expectedPoints);
+  }
+
+  @Test
   void switchTrumpSeven_switchTrumpSevenInTheTradePhase_throwsIllegalStateException() {
     Round round = Round.newInstance(Owner.NOBODY);
 
@@ -145,6 +230,22 @@ public class RoundTest {
 
     assertThatThrownBy(() -> round.playTrump(Suit.DIAMONDS, Owner.PLAYER))
         .isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void getTrumpSuit_newRoundWithDiamondsSuit_returnsDiamonds() {
+    Round round = Round.newInstance(Owner.NOBODY);
+    round.playTrump(Suit.DIAMONDS, Owner.PLAYER);
+    round.switchPhase();
+
+    assertThat(round.getTrumpSuit()).isEqualTo(Suit.DIAMONDS);
+  }
+
+  @Test
+  void isOver_newRound_false() {
+    Round round = Round.newInstance(Owner.NOBODY);
+
+    assertFalse(round.isOver());
   }
 
   @Test
@@ -303,6 +404,72 @@ public class RoundTest {
     Round round = Round.newInstance(newInformation, PhaseName.TRADE);
 
     assertThat(round.isFourSevenResettable()).isEqualTo(Boolean.TRUE);
+  }
+
+  @Test
+  void resetCauseFourSevens_newRoundTradePhaseBotFourSevens_newRound() {
+    int cardNumberTradePhase = 12;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.COMBO);
+    round.resetCauseFourSevens();
+
+    assertThat(round.countHandCards()).isEqualTo(cardNumberTradePhase);
+  }
+
+  @Test
+  void resetCauseFourSevens_newRoundTradePhaseBotThreeSevens_throwsIllegalStateException() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.SEVEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.SEVEN));
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.HEARTS, Value.SEVEN));
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    playerDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    botDeck.addCard(cardDeck.dealRandomCard());
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(Trump.newInstance(trumpCard))
+            .trumpChangePossible(true)
+            .build();
+
+    Round round = Round.newInstance(newInformation, PhaseName.COMBO);
+
+    assertThatThrownBy(round::resetCauseFourSevens).isInstanceOf(IllegalStateException.class);
   }
 
   @Test

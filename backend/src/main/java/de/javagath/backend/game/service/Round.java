@@ -216,8 +216,8 @@ class Round {
     Owner winner = getWinner();
     if (!information.isNativeTrump() && !winner.equals(information.getTrumpPicker())) {
       Score score = information.getScore();
-      score.setDefault();
       int totalPoints = score.getPoints(Owner.PLAYER) + score.getPoints(Owner.BOT);
+      score.setDefault();
       score.addPoints(winner, totalPoints);
     }
   }
