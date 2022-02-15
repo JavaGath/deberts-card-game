@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SuppressWarnings({"javadoc"})
 @SpringBootTest
-public class ComboTest {
+public class CombinationTest {
 
   @Test
   void add_notValidCombination_throwIllegalArgumentException() {
@@ -82,7 +82,7 @@ public class ComboTest {
   }
 
   @Test
-  void compareSuit_nineTrumpAndNineNonTrumpCombinations_trumpCombinationWins() {
+  void compareToSuit_nineTrumpAndNineNonTrumpCombinations_trumpCombinationWins() {
     Owner player = Owner.PLAYER;
     Owner bot = Owner.BOT;
     Suit trump = Suit.SPADES;
@@ -106,7 +106,7 @@ public class ComboTest {
   }
 
   @Test
-  void compareSuit_nineNonTrumpAndNineTrumpCombinations_trumpCombinationWins() {
+  void compareToSuit_nineNonTrumpAndNineTrumpCombinations_trumpCombinationWins() {
     Owner player = Owner.PLAYER;
     Owner bot = Owner.BOT;
     Suit trump = Suit.SPADES;
@@ -130,26 +130,59 @@ public class ComboTest {
   }
 
   @Test
-  void compareSuit_nineNonTrumpAndNineNonTrumpCombinations_sameValueByComparing() {
+  void compareToSuit_nineNonTrumpAndNineNonTrumpCombinations_sameValueByComparing() {
     Owner player = Owner.PLAYER;
     Owner bot = Owner.BOT;
     Suit trump = Suit.CLUBS;
     int expectedCompareResult = 0;
-    Combination trumpCombination = Combination.newInstance(player);
+    Combination firstNonTrumpCombination = Combination.newInstance(player);
     Set<Card> firstNonTrumpTertz = new TreeSet<>();
     firstNonTrumpTertz.add(Card.newInstance(Suit.SPADES, Value.SEVEN));
     firstNonTrumpTertz.add(Card.newInstance(Suit.SPADES, Value.EIGHT));
     firstNonTrumpTertz.add(Card.newInstance(Suit.SPADES, Value.NINE));
-    Combination nonTrumpCombination = Combination.newInstance(bot);
+    Combination secondNonTrumpCombination = Combination.newInstance(bot);
     Set<Card> secondNonTrumpTertz = new TreeSet<>();
     secondNonTrumpTertz.add(Card.newInstance(Suit.HEARTS, Value.SEVEN));
     secondNonTrumpTertz.add(Card.newInstance(Suit.HEARTS, Value.EIGHT));
     secondNonTrumpTertz.add(Card.newInstance(Suit.HEARTS, Value.NINE));
 
-    trumpCombination.add(firstNonTrumpTertz);
-    nonTrumpCombination.add(secondNonTrumpTertz);
+    firstNonTrumpCombination.add(firstNonTrumpTertz);
+    secondNonTrumpCombination.add(secondNonTrumpTertz);
 
-    assertThat(nonTrumpCombination.compareToSuit(trumpCombination, trump))
+    assertThat(firstNonTrumpCombination.compareToSuit(secondNonTrumpCombination, trump))
+        .isEqualTo(expectedCompareResult);
+  }
+
+  @Test
+  void compareToSuit_emptyAttackerEmptyDefender_sameValueByComparing() {
+    Owner player = Owner.PLAYER;
+    Owner bot = Owner.BOT;
+    Suit trump = Suit.CLUBS;
+    int expectedCompareResult = 0;
+    Combination playerCombination = Combination.newInstance(player);
+    Combination botCombination = Combination.newInstance(bot);
+
+    assertThat(playerCombination.compareToSuit(botCombination, trump))
+        .isEqualTo(expectedCompareResult);
+  }
+
+  @Test
+  void compareToSuit_emptyAttackerNotEmptyDefender_lowerValueByComparing() {
+    Owner player = Owner.PLAYER;
+    Owner bot = Owner.BOT;
+    Suit trump = Suit.CLUBS;
+    int expectedCompareResult = -1;
+    Combination playerCombination = Combination.newInstance(player);
+    Combination botCombination = Combination.newInstance(bot);
+
+    Set<Card> nonTrumpTertz = new TreeSet<>();
+    nonTrumpTertz.add(Card.newInstance(Suit.SPADES, Value.SEVEN));
+    nonTrumpTertz.add(Card.newInstance(Suit.SPADES, Value.EIGHT));
+    nonTrumpTertz.add(Card.newInstance(Suit.SPADES, Value.NINE));
+
+    botCombination.add(nonTrumpTertz);
+
+    assertThat(playerCombination.compareToSuit(botCombination, trump))
         .isEqualTo(expectedCompareResult);
   }
 
