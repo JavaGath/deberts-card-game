@@ -50,7 +50,7 @@ class TrumpTest {
   }
 
   @Test
-  void switchTrump_newInstanceSwitchToTheOtherTrump_throwsIllegalArgumentException() {
+  void switchTrumpSeven_newInstanceSwitchToTheOtherTrump_throwsIllegalArgumentException() {
     Card card = Card.newInstance(Suit.CLUBS, Value.QUEEN);
     Trump trump = Trump.newInstance(card);
     Card newTrumpCard = Card.newInstance(Suit.DIAMONDS, Value.SEVEN);
@@ -60,7 +60,7 @@ class TrumpTest {
   }
 
   @Test
-  void switchTrump_newInstanceSetOtherTrumpSwitchTrump_throwsIllegalArgumentException() {
+  void switchTrumpSeven_newInstanceSetOtherTrumpSwitchTrumpSeven_throwsIllegalArgumentException() {
     Card card = Card.newInstance(Suit.CLUBS, Value.QUEEN);
     Trump trump = Trump.newInstance(card);
     Card newTrumpCardToSet = Card.newInstance(Suit.HEARTS, Value.KING);
@@ -73,7 +73,7 @@ class TrumpTest {
   }
 
   @Test
-  void switchTrump_newInstanceSwitchToTheTrumpSeven_cardIsSwitched() {
+  void switchTrumpSeven_newInstanceSwitchToTheTrumpSeven_cardIsSwitched() {
     Card card = Card.newInstance(Suit.CLUBS, Value.QUEEN);
     Trump trump = Trump.newInstance(card);
     Card newTrumpCard = Card.newInstance(Suit.CLUBS, Value.SEVEN);
@@ -83,6 +83,16 @@ class TrumpTest {
     assertThat(trumpCard).isEqualTo((card));
     assertThat(trump.getSuit()).isEqualTo(newTrumpCard.getSuit());
     assertThat(trump.getValue()).isEqualTo(newTrumpCard.getValue());
+  }
+
+  @Test
+  void switchTrumpSeven_newInstanceSwitchToTheNotTrumpSeven_throwsIllegalArgumentException() {
+    Card card = Card.newInstance(Suit.CLUBS, Value.QUEEN);
+    Trump trump = Trump.newInstance(card);
+    Card newTrumpCard = Card.newInstance(Suit.CLUBS, Value.EIGHT);
+
+    assertThatThrownBy(() -> trump.switchTrumpSeven(newTrumpCard))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

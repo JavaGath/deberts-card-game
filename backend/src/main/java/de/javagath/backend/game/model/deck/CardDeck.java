@@ -33,6 +33,7 @@ public class CardDeck extends AbstractDeck {
         fullSuits.add(suit);
       }
     }
+    this.containedCards = 32;
   }
 
   @Override

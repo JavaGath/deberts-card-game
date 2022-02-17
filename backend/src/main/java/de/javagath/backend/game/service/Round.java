@@ -6,6 +6,7 @@ import de.javagath.backend.game.model.deck.Deck;
 import de.javagath.backend.game.model.deck.DeckFactory;
 import de.javagath.backend.game.model.deck.Trump;
 import de.javagath.backend.game.model.enums.Owner;
+import de.javagath.backend.game.model.enums.PhaseName;
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.service.phase.Phase;
 import de.javagath.backend.game.service.phase.PhaseFactory;
@@ -25,46 +26,11 @@ import de.javagath.backend.game.service.phase.PhaseFactory;
  * @since 1.0
  */
 class Round {
-  private final Owner beginner;
-  private final RoundInformation information;
+  private RoundInformation information;
   private Phase phase;
 
-  private Round() {
-    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
-    Card trumpCard = cardDeck.dealRandomCard();
-    int ownerValue = (Math.random() <= 0.5) ? 1 : 2;
-    beginner = Owner.getOwnerByValue(ownerValue);
-    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
-    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
-    information =
-        RoundInformation.builder()
-            .cardDeck(cardDeck)
-            .playerDeck(playerDeck)
-            .botDeck(botDeck)
-            .trumpDeck(Trump.newInstance(trumpCard))
-            .turn(beginner)
-            .trumpChangePossible(true)
-            .build();
-
-    phase = PhaseFactory.getPhase(information);
-  }
-
-  private Round(Owner beginner) {
-    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
-    Card trumpCard = cardDeck.dealRandomCard();
-    this.beginner = beginner;
-    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
-    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
-    information =
-        RoundInformation.builder()
-            .cardDeck(cardDeck)
-            .playerDeck(playerDeck)
-            .botDeck(botDeck)
-            .trumpDeck(Trump.newInstance(trumpCard))
-            .turn(this.beginner)
-            .trumpChangePossible(true)
-            .build();
-
+  private Round(RoundInformation information) {
+    this.information = information;
     phase = PhaseFactory.getPhase(information);
   }
 
@@ -76,11 +42,53 @@ class Round {
    * @return new {@code Round} object
    */
   static Round newInstance(Owner beginner) {
+    RoundInformation newInformation = createDefaultInformation();
     if (beginner.equals(Owner.BOT) || beginner.equals(Owner.PLAYER)) {
-      return new Round(beginner);
+      newInformation.setTurn(beginner);
+      newInformation.setBeginner(beginner);
     } else {
-      return new Round();
+      int ownerValue = (Math.random() <= 0.5) ? 1 : 2;
+      Owner newBeginner = Owner.getOwnerByValue(ownerValue);
+      newInformation.setTurn(newBeginner);
+      newInformation.setBeginner(newBeginner);
     }
+    return new Round(newInformation);
+  }
+
+  /**
+   * Factory method to create a new {@code Round} based on RoundInformation and wished phase. Method
+   * to support the unit-testing.
+   *
+   * @param information Round information
+   * @param phase wised phase for the round
+   * @return new {@code Round} object
+   */
+  static Round newInstance(RoundInformation information, PhaseName phase) {
+    Round round = newInstance(Owner.NOBODY);
+    if (phase == PhaseName.COMBO) {
+      round.playTrump(Suit.HEARTS, Owner.PLAYER);
+      round.switchPhase();
+    } else if (phase == PhaseName.ACTION) {
+      round.playTrump(Suit.HEARTS, Owner.PLAYER);
+      round.switchPhase();
+      round.switchPhase();
+    }
+    round.setInformation(information);
+    return round;
+  }
+
+  private static RoundInformation createDefaultInformation() {
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealRandomCard();
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    return RoundInformation.builder()
+        .cardDeck(cardDeck)
+        .playerDeck(playerDeck)
+        .botDeck(botDeck)
+        .trumpDeck(Trump.newInstance(trumpCard))
+        .trumpChangePossible(true)
+        .build();
   }
 
   /**
@@ -90,6 +98,63 @@ class Round {
    */
   RoundInformation getInformation() {
     return information;
+  }
+
+  /**
+   * Sets new {@code RoundInformation} for the round and its current phase. The main Idea of this
+   * method is to improve unit-testing for the project.
+   *
+   * @param information new round information
+   */
+  void setInformation(RoundInformation information) {
+    this.information = information;
+    phase.setInformation(information);
+  }
+
+  /** Resets current round if one player has for sevens. */
+  void resetCauseFourSevens() {
+    if (phase.isFourSevenResettable()) {
+      information = createDefaultInformation();
+      phase = PhaseFactory.getPhase(information);
+    } else {
+      throw new IllegalStateException("Round could not be resetted in the current state");
+    }
+  }
+
+  /**
+   * Returns true if it is possible to switch a trump seven.
+   *
+   * @return true if possible
+   */
+  boolean isSevenSwitchable() {
+    return phase.isSevenSwitchable();
+  }
+
+  /**
+   * Returns true if it is possible to reset a round because of four sevens in the hand.
+   *
+   * @return true if player has four sevens in the hand
+   */
+  boolean isFourSevenResettable() {
+    return phase.isFourSevenResettable();
+  }
+
+  /**
+   * Returns a total number of cards in the hands of players.
+   *
+   * @return total card number
+   */
+  int countHandCards() {
+    return information.countHandCards();
+  }
+
+  /**
+   * Returns the trump suit.
+   *
+   * @return trump suit
+   */
+  Suit getTrumpSuit() {
+    return information.getTrumpSuit();
   }
 
   /**
@@ -151,10 +216,30 @@ class Round {
     Owner winner = getWinner();
     if (!information.isNativeTrump() && !winner.equals(information.getTrumpPicker())) {
       Score score = information.getScore();
-      score.setDefault();
       int totalPoints = score.getPoints(Owner.PLAYER) + score.getPoints(Owner.BOT);
+      score.setDefault();
       score.addPoints(winner, totalPoints);
     }
+  }
+
+  /**
+   * Returns combinations points of the player.
+   *
+   * @param owner player
+   * @return combination points
+   */
+  int getCombinationPoints(Owner owner) {
+    return information.getCombinationPoints(owner);
+  }
+
+  /**
+   * Returns points of the player.
+   *
+   * @param owner player
+   * @return points
+   */
+  public int getPoints(Owner owner) {
+    return information.getPoints(owner);
   }
 
   /**

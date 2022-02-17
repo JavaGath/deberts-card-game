@@ -13,24 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class PartyTest {
 
   @Test
-  void newInstance_newPartyWithTheFirstRound_eachPlayerHas6CardsInTheHand() {
-    int expectedCardNumber = 12;
-
-    Party newParty = Party.newInstance();
-    PartyInformation information = newParty.getPartyInformation();
-
-    assertThat(information.getRoundInformation().countHandCards()).isEqualTo(expectedCardNumber);
-  }
-
-  @Test
-  void newInstance_newPartyWithTheFirstRound_trumpDeckIsNotEmpty() {
-    Party newParty = Party.newInstance();
-    PartyInformation information = newParty.getPartyInformation();
-
-    assertThat(information.getRoundInformation().getTrumpDeck().getSuit()).isInstanceOf(Suit.class);
-  }
-
-  @Test
   void newInstance_newPartyWithTheFirstRound_roundHasBeginner() {
     Party newParty = Party.newInstance();
     PartyInformation information = newParty.getPartyInformation();

@@ -28,6 +28,7 @@ public class RoundInformation {
   private Deck playerDeck;
   private Deck botDeck;
   private boolean trumpChangePossible;
+  @Builder.Default private Owner beginner = Owner.PLAYER;
   @Builder.Default private Owner turn = Owner.PLAYER;
   private Owner trumpPicker;
   @Builder.Default private PhaseName phaseName = PhaseName.TRADE;
@@ -50,6 +51,26 @@ public class RoundInformation {
    */
   public Score getScore() {
     return score;
+  }
+
+  /**
+   * Returns combinations points of the player.
+   *
+   * @param owner player
+   * @return combination points
+   */
+  public int getCombinationPoints(Owner owner) {
+    return combinationScore.getPoints(owner);
+  }
+
+  /**
+   * Returns points of the player.
+   *
+   * @param owner player
+   * @return points
+   */
+  public int getPoints(Owner owner) {
+    return score.getPoints(owner);
   }
 
   /**
@@ -78,7 +99,7 @@ public class RoundInformation {
    * @param owner owner of the deck
    * @return owners deck
    */
-  public Deck getDeckByOwner(Owner owner) {
+  public Deck getPlayerDeck(Owner owner) {
     if (owner.equals(Owner.PLAYER)) {
       return playerDeck;
     } else if (owner.equals(Owner.BOT)) {
@@ -116,15 +137,6 @@ public class RoundInformation {
   }
 
   /**
-   * Sets {@code CardDeck}.
-   *
-   * @param cardDeck new {@code Deck}
-   */
-  public void setCardDeck(Deck cardDeck) {
-    this.cardDeck = cardDeck;
-  }
-
-  /**
    * Returns {@code HandDeck} of the player.
    *
    * @return players {@code HandDeck}
@@ -152,15 +164,6 @@ public class RoundInformation {
   }
 
   /**
-   * Sets {@code Trump}.
-   *
-   * @param trumpDeck {@code Trump} to set
-   */
-  public void setTrumpDeck(Trump trumpDeck) {
-    this.trumpDeck = trumpDeck;
-  }
-
-  /**
    * Returns actual turn in the round.
    *
    * @return actual turn
@@ -176,6 +179,24 @@ public class RoundInformation {
    */
   public void setTurn(Owner turn) {
     this.turn = turn;
+  }
+
+  /**
+   * Returns beginner of the Round.
+   *
+   * @return round beginner
+   */
+  public Owner getBeginner() {
+    return beginner;
+  }
+
+  /**
+   * Sets beginner of the round.
+   *
+   * @param beginner whose begin the round
+   */
+  public void setBeginner(Owner beginner) {
+    this.beginner = beginner;
   }
 
   /**
@@ -244,6 +265,15 @@ public class RoundInformation {
   }
 
   /**
+   * Returns true if trump is not picked and can be chosen.
+   *
+   * @return true if trump is not picked
+   */
+  public boolean isTrumpChangePossible() {
+    return trumpChangePossible;
+  }
+
+  /**
    * Switches a trump seven from the players deck with the trump card. This switch will be declared
    * in the decks contained in this class. This switch is possible only by native trump.
    */
@@ -258,7 +288,7 @@ public class RoundInformation {
 
   private Deck getDeckContainingCard(Suit suit, Value value) {
     if (!contains(suit, value)) {
-      throw new IllegalStateException("Players do not have any trump seven");
+      throw new IllegalStateException("Players do not have any " + suit + " " + value);
     }
 
     return playerDeck.contains(suit, value) ? playerDeck : botDeck;
@@ -283,11 +313,36 @@ public class RoundInformation {
     }
   }
 
+  /** Deals cards to the HandDecks based on the current phase. */
   public void dealCards() {
-    PhaseName name = phaseName;
     for (int i = 0; i < phaseName.getValue(); i++) {
       playerDeck.addCard(cardDeck.dealRandomCard());
       botDeck.addCard(cardDeck.dealRandomCard());
     }
+  }
+
+  /**
+   * Returns true if it is possible to switch a trump seven.
+   *
+   * @return true if possible
+   */
+  public boolean isSevenSwitchable() {
+    return trumpDeck.isNative() && contains(trumpDeck.getSuit(), Value.SEVEN);
+  }
+
+  /**
+   * Returns true if it is possible to reset a round because of four sevens in the hand.
+   *
+   * @return true if player has four sevens in the hand
+   */
+  public boolean isFourSevenResettable() {
+    return (playerDeck.contains(Suit.CLUBS, Value.SEVEN)
+            && playerDeck.contains(Suit.DIAMONDS, Value.SEVEN)
+            && playerDeck.contains(Suit.HEARTS, Value.SEVEN)
+            && playerDeck.contains(Suit.SPADES, Value.SEVEN))
+        || (botDeck.contains(Suit.CLUBS, Value.SEVEN)
+            && botDeck.contains(Suit.DIAMONDS, Value.SEVEN)
+            && botDeck.contains(Suit.HEARTS, Value.SEVEN)
+            && botDeck.contains(Suit.SPADES, Value.SEVEN));
   }
 }

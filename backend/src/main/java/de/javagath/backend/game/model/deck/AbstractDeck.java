@@ -26,6 +26,7 @@ public abstract class AbstractDeck implements Deck {
   final LinkedList<Suit> fullSuits = new LinkedList<>();
   EnumMap<Suit, SuitPack> suitMap = new EnumMap<>(Suit.class);
   Owner owner;
+  int containedCards;
 
   @Override
   public boolean contains(Card card) {
@@ -54,6 +55,7 @@ public abstract class AbstractDeck implements Deck {
     if (suitPack.isEmpty()) {
       fullSuits.remove(suit);
     }
+    containedCards--;
     return dealtCard;
   }
 
@@ -69,6 +71,7 @@ public abstract class AbstractDeck implements Deck {
       if (suitPack.isEmpty()) {
         fullSuits.remove(suit);
       }
+      containedCards--;
       return cardToDeal;
     } catch (IllegalArgumentException e) {
       throw new NoSuchElementException("Deck does not contain any cards");
