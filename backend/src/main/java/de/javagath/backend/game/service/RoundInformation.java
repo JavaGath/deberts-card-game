@@ -99,7 +99,7 @@ public class RoundInformation {
    * @param owner owner of the deck
    * @return owners deck
    */
-  public Deck getDeckByOwner(Owner owner) {
+  public Deck getPlayerDeck(Owner owner) {
     if (owner.equals(Owner.PLAYER)) {
       return playerDeck;
     } else if (owner.equals(Owner.BOT)) {
@@ -137,15 +137,6 @@ public class RoundInformation {
   }
 
   /**
-   * Sets {@code CardDeck}.
-   *
-   * @param cardDeck new {@code Deck}
-   */
-  public void setCardDeck(Deck cardDeck) {
-    this.cardDeck = cardDeck;
-  }
-
-  /**
    * Returns {@code HandDeck} of the player.
    *
    * @return players {@code HandDeck}
@@ -170,15 +161,6 @@ public class RoundInformation {
    */
   public Trump getTrumpDeck() {
     return trumpDeck;
-  }
-
-  /**
-   * Sets {@code Trump}.
-   *
-   * @param trumpDeck {@code Trump} to set
-   */
-  public void setTrumpDeck(Trump trumpDeck) {
-    this.trumpDeck = trumpDeck;
   }
 
   /**
@@ -306,7 +288,7 @@ public class RoundInformation {
 
   private Deck getDeckContainingCard(Suit suit, Value value) {
     if (!contains(suit, value)) {
-      throw new IllegalStateException("Players do not have any trump seven");
+      throw new IllegalStateException("Players do not have any " + suit + " " + value);
     }
 
     return playerDeck.contains(suit, value) ? playerDeck : botDeck;
@@ -354,7 +336,6 @@ public class RoundInformation {
    * @return true if player has four sevens in the hand
    */
   public boolean isFourSevenResettable() {
-
     return (playerDeck.contains(Suit.CLUBS, Value.SEVEN)
             && playerDeck.contains(Suit.DIAMONDS, Value.SEVEN)
             && playerDeck.contains(Suit.HEARTS, Value.SEVEN)
