@@ -71,10 +71,9 @@ kubectl get pods -o wide
 4. ~~Game model~~
 5. ~~Deal cads~~
 6. ~~Trade Phase~~
-7. Combination Phase
-8. Action Phase
-9. End of the Round
-10. End of the Party
+7. ~~Combination Phase~~
+8. ~~Action Phase~~
+9. Party
 11. Frontend
 12. DB-Schema
 
