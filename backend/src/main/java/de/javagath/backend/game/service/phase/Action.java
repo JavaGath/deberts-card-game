@@ -42,6 +42,7 @@ public class Action implements Phase {
     int points = challenge.getPoints(information.getTrumpSuit());
     points = addLastHandPoints(points);
     information.addPoints(winner, points);
+    information.addBribe(challenge, winner);
   }
 
   @Override

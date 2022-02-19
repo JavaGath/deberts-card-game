@@ -1,12 +1,15 @@
 package de.javagath.backend.game.service;
 
+import de.javagath.backend.game.model.Bribe;
 import de.javagath.backend.game.model.deck.Card;
+import de.javagath.backend.game.model.deck.Challenge;
 import de.javagath.backend.game.model.deck.Deck;
 import de.javagath.backend.game.model.deck.Trump;
 import de.javagath.backend.game.model.enums.Owner;
 import de.javagath.backend.game.model.enums.PhaseName;
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.model.enums.Value;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import lombok.Builder;
 
@@ -32,6 +35,21 @@ public class RoundInformation {
   @Builder.Default private Owner turn = Owner.PLAYER;
   private Owner trumpPicker;
   @Builder.Default private PhaseName phaseName = PhaseName.TRADE;
+
+  @Builder.Default
+  private Map<Owner, Bribe> bribeMap =
+      Map.of(Owner.BOT, new Bribe(Owner.BOT), Owner.PLAYER, new Bribe(Owner.PLAYER));
+
+  /**
+   * Adds challenge to the bribe list of the player.
+   *
+   * @param challenge won challenge
+   * @param owner bribe owner
+   */
+  public void addBribe(Challenge<?> challenge, Owner owner) {
+    Bribe ownerBribe = bribeMap.get(owner);
+    ownerBribe.addChallenge(challenge);
+  }
 
   /**
    * Returns combination score of the current {@code Round}. Combination score will be count
@@ -308,7 +326,8 @@ public class RoundInformation {
   }
 
   private void addCombinationScore(Owner owner) {
-    if (score.getPoints(owner) != 0) {
+    Bribe ownersBribe = bribeMap.get(owner);
+    if (!ownersBribe.isEmpty()) {
       score.addPoints(owner, combinationScore.getPoints(owner));
     }
   }

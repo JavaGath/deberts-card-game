@@ -74,6 +74,7 @@ kubectl get pods -o wide
 7. ~~Combination Phase~~
 8. ~~Action Phase~~
 9. Party
+10. MVN-Infrastructure Frontend
 11. Frontend
 12. DB-Schema
 
