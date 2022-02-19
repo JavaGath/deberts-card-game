@@ -9,6 +9,8 @@ import de.javagath.backend.game.model.enums.Owner;
 import de.javagath.backend.game.model.enums.PhaseName;
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.model.enums.Value;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import lombok.Builder;
@@ -26,6 +28,7 @@ import lombok.Builder;
 public class RoundInformation {
   private final Score score = new Score();
   private final Score combinationScore = new Score();
+  @Builder.Default private ArrayList<Challenge<?>> bribeList = new ArrayList<>();
   private Deck cardDeck;
   private Trump trumpDeck;
   private Deck playerDeck;
@@ -49,6 +52,7 @@ public class RoundInformation {
   public void addBribe(Challenge<?> challenge, Owner owner) {
     Bribe ownerBribe = bribeMap.get(owner);
     ownerBribe.addChallenge(challenge);
+    bribeList.add(challenge);
   }
 
   /**
@@ -317,10 +321,38 @@ public class RoundInformation {
   }
 
   /**
-   * Sums up round score with the combination score. If a player does not have any points,
-   * combination score will not be added.
+   * Sums up round score with the combination score (incl. sweet bribe). If a player does not have
+   * any points, combination score will not be added.
    */
   public void sumUp() {
+    Bribe playerBribe = bribeMap.get(Owner.PLAYER);
+    Bribe botBribe = bribeMap.get(Owner.BOT);
+    int playerSweet = playerBribe.countSweetBride(bribeList);
+    int botSweet = botBribe.countSweetBride(bribeList);
+    int abs = Math.abs(playerSweet - botSweet);
+
+    if (abs != 0) {
+      Bribe sweetSource;
+      Bribe sweetTarget;
+      if (playerSweet > botSweet) {
+        sweetSource = playerBribe;
+        sweetTarget = botBribe;
+      } else {
+        sweetSource = botBribe;
+        sweetTarget = playerBribe;
+      }
+
+      Suit trumpSuit = trumpDeck.getSuit();
+      List<Challenge<?>> sweetBrideList = sweetSource.takeSweetBrideList(abs, trumpSuit);
+
+      for (Challenge<?> sweetChallenge : sweetBrideList) {
+        int points = sweetChallenge.getPoints(trumpSuit);
+        score.addPoints(sweetTarget.getOwner(), points);
+        sweetTarget.addChallenge(sweetChallenge);
+        score.subtractPoints(sweetSource.getOwner(), points);
+      }
+    }
+
     addCombinationScore(Owner.PLAYER);
     addCombinationScore(Owner.BOT);
   }

@@ -209,6 +209,90 @@ public class RoundTest {
   }
 
   @Test
+  void sumUp_botMakesSweetBridePlayerNothing_player21PointsBot31() {
+    int playerExpectedPoints = 21;
+    int botExpectedPoints = 31;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Trump trumpDeck = Trump.newInstance(trumpCard);
+    Deck botDeck = DeckFactory.getDeck(Owner.BOT);
+    botDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.TEN));
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.TEN));
+    Deck playerDeck = DeckFactory.getDeck(Owner.PLAYER);
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.ACE));
+    playerDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.ACE));
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(trumpDeck)
+            .trumpPicker(Owner.PLAYER)
+            .trumpChangePossible(false)
+            .build();
+    Challenge<Card> firstChallenge = new Challenge<>();
+    firstChallenge.setAttacker(Owner.PLAYER);
+    firstChallenge.setDefender(Owner.BOT);
+    firstChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.ACE));
+    firstChallenge.setDefenderValue(Card.newInstance(Suit.DIAMONDS, Value.TEN));
+    Challenge<Card> secondChallenge = new Challenge<>();
+    secondChallenge.setAttacker(Owner.BOT);
+    secondChallenge.setDefender(Owner.PLAYER);
+    secondChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.TEN));
+    secondChallenge.setDefenderValue(Card.newInstance(Suit.CLUBS, Value.ACE));
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+    round.decideChallenge(firstChallenge);
+    round.decideChallenge(secondChallenge);
+    round.sumUp();
+
+    assertThat(round.getPoints(Owner.BOT)).isEqualTo(botExpectedPoints);
+    assertThat(round.getPoints(Owner.PLAYER)).isEqualTo(playerExpectedPoints);
+  }
+
+  @Test
+  void sumUp_playerMakesSweetBrideBotNothing_bot21PointsPlayer31() {
+    int playerExpectedPoints = 31;
+    int botExpectedPoints = 21;
+    Deck cardDeck = DeckFactory.getDeck(Owner.NOBODY);
+    Card trumpCard = cardDeck.dealCard(Suit.DIAMONDS, Value.JACK);
+    Trump trumpDeck = Trump.newInstance(trumpCard);
+    Deck playerDeck = DeckFactory.getDeck(Owner.BOT);
+    playerDeck.addCard(cardDeck.dealCard(Suit.DIAMONDS, Value.TEN));
+    playerDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.TEN));
+    Deck botDeck = DeckFactory.getDeck(Owner.PLAYER);
+    botDeck.addCard(cardDeck.dealCard(Suit.SPADES, Value.ACE));
+    botDeck.addCard(cardDeck.dealCard(Suit.CLUBS, Value.ACE));
+    RoundInformation newInformation =
+        RoundInformation.builder()
+            .cardDeck(cardDeck)
+            .playerDeck(playerDeck)
+            .botDeck(botDeck)
+            .trumpDeck(trumpDeck)
+            .trumpPicker(Owner.BOT)
+            .trumpChangePossible(false)
+            .build();
+    Challenge<Card> firstChallenge = new Challenge<>();
+    firstChallenge.setAttacker(Owner.BOT);
+    firstChallenge.setDefender(Owner.PLAYER);
+    firstChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.ACE));
+    firstChallenge.setDefenderValue(Card.newInstance(Suit.DIAMONDS, Value.TEN));
+    Challenge<Card> secondChallenge = new Challenge<>();
+    secondChallenge.setAttacker(Owner.PLAYER);
+    secondChallenge.setDefender(Owner.BOT);
+    secondChallenge.setAttackerValue(Card.newInstance(Suit.SPADES, Value.TEN));
+    secondChallenge.setDefenderValue(Card.newInstance(Suit.CLUBS, Value.ACE));
+
+    Round round = Round.newInstance(newInformation, PhaseName.ACTION);
+    round.decideChallenge(firstChallenge);
+    round.decideChallenge(secondChallenge);
+    round.sumUp();
+
+    assertThat(round.getPoints(Owner.BOT)).isEqualTo(botExpectedPoints);
+    assertThat(round.getPoints(Owner.PLAYER)).isEqualTo(playerExpectedPoints);
+  }
+
+  @Test
   void switchTrumpSeven_switchTrumpSevenInTheTradePhase_throwsIllegalStateException() {
     Round round = Round.newInstance(Owner.NOBODY);
 
