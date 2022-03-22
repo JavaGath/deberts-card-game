@@ -88,8 +88,4 @@ public class Party {
   public void switchTrumpSeven() {
     round.switchTrumpSeven();
   }
-
-  Round getRound() {
-    return round;
-  }
 }
