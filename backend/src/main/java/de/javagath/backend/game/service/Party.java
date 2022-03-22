@@ -62,16 +62,29 @@ public class Party {
   public void playTurn(Challenge<?> challenge) {
     round.decideChallenge(challenge);
     if (round.isOver()) {
-      endRound();
+      sumUp();
     }
   }
 
-  void endRound() {
+  void sumUp() {
     round.sumUp();
-    Owner dealer = round.getWinner().equals(Owner.BOT) ? Owner.BOT : Owner.PLAYER;
-    round = Round.newInstance(dealer);
     partyInformation.addCurrentScore();
-    partyInformation.setRoundInformation(round.getInformation());
+
+    if ((partyInformation.getPoints(Owner.PLAYER) > 501
+            || partyInformation.getPoints(Owner.BOT) > 501)
+        && partyInformation.getPoints(Owner.PLAYER) != partyInformation.getPoints(Owner.BOT)) {
+
+      partyInformation.setOver(true);
+      if (partyInformation.getPoints(Owner.PLAYER) > partyInformation.getPoints(Owner.BOT)) {
+        partyInformation.setWinner(Owner.PLAYER);
+      } else {
+        partyInformation.setWinner(Owner.BOT);
+      }
+    }
+    if (!partyInformation.isOver()) {
+      round = Round.newInstance(round.getWinner());
+      partyInformation.setRoundInformation(round.getInformation());
+    }
   }
 
   /**

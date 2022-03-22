@@ -16,18 +16,57 @@ public class PartyInformation {
   private final Score score = new Score();
   private final List<Score> roundScoreHistory = new LinkedList<>();
   private RoundInformation roundInformation;
+  private boolean isOver = false;
+  private Owner winner = Owner.NOBODY;
 
   PartyInformation(RoundInformation roundInformation) {
     this.roundInformation = roundInformation;
   }
 
   /**
-   * Returns score of the current {@code Party}.
+   * Returns true if one player gets 501 points.
    *
-   * @return current combinations score
+   * @return returns true if round is over
    */
-  Score getScore() {
-    return score;
+  boolean isOver() {
+    return isOver;
+  }
+
+  /**
+   * Sets boolean about the party status.
+   *
+   * @param over true if party should end
+   */
+  public void setOver(boolean over) {
+    isOver = over;
+  }
+
+  /**
+   * Returns the winner of the party. While Party is not over returns {@code Owner.NOBODY}.
+   *
+   * @return winner of the current party
+   */
+  Owner getWinner() {
+    return winner;
+  }
+
+  /**
+   * Sets Owner who won the party.
+   *
+   * @param winner Owner who won
+   */
+  public void setWinner(Owner winner) {
+    this.winner = winner;
+  }
+
+  /**
+   * Returns points of the player.
+   *
+   * @param owner player
+   * @return points
+   */
+  public int getPoints(Owner owner) {
+    return score.getPoints(owner);
   }
 
   /**
