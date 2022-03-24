@@ -16,7 +16,7 @@ public class PartyInformation {
   private final Score score = new Score();
   private final List<Score> roundScoreHistory = new LinkedList<>();
   private RoundInformation roundInformation;
-  private boolean isOver = false;
+  private boolean over = false;
   private Owner winner = Owner.NOBODY;
 
   PartyInformation(RoundInformation roundInformation) {
@@ -29,16 +29,7 @@ public class PartyInformation {
    * @return returns true if round is over
    */
   boolean isOver() {
-    return isOver;
-  }
-
-  /**
-   * Sets boolean about the party status.
-   *
-   * @param over true if party should end
-   */
-  public void setOver(boolean over) {
-    isOver = over;
+    return over;
   }
 
   /**
@@ -48,25 +39,6 @@ public class PartyInformation {
    */
   Owner getWinner() {
     return winner;
-  }
-
-  /**
-   * Sets Owner who won the party.
-   *
-   * @param winner Owner who won
-   */
-  public void setWinner(Owner winner) {
-    this.winner = winner;
-  }
-
-  /**
-   * Returns points of the player.
-   *
-   * @param owner player
-   * @return points
-   */
-  public int getPoints(Owner owner) {
-    return score.getPoints(owner);
   }
 
   /**
@@ -96,11 +68,27 @@ public class PartyInformation {
     this.roundInformation = roundInformation;
   }
 
-  /** Adds score of the current round to the party score and declares it the round history. */
-  void addCurrentScore() {
+  /**
+   * Adds score of the current round to the party score, declares it the round history and checks
+   * the last game possibility.
+   */
+  void sumUp() {
     Score roundScore = roundInformation.getScore();
     roundScoreHistory.add(roundScore);
     score.addPoints(Owner.BOT, roundScore.getPoints(Owner.BOT));
     score.addPoints(Owner.PLAYER, roundScore.getPoints(Owner.PLAYER));
+    if (isLastGame()) {
+      over = true;
+      winner = decideWinner();
+    }
+  }
+
+  private Owner decideWinner() {
+    return score.getPoints(Owner.PLAYER) > score.getPoints(Owner.BOT) ? Owner.PLAYER : Owner.BOT;
+  }
+
+  private boolean isLastGame() {
+    return !score.getPoints(Owner.BOT).equals(score.getPoints(Owner.PLAYER))
+        && (score.getPoints(Owner.PLAYER) > 501 || score.getPoints(Owner.BOT) > 501);
   }
 }

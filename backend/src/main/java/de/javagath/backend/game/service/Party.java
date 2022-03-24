@@ -66,21 +66,9 @@ public class Party {
     }
   }
 
-  void sumUp() {
+  private void sumUp() {
     round.sumUp();
-    partyInformation.addCurrentScore();
-
-    if ((partyInformation.getPoints(Owner.PLAYER) > 501
-            || partyInformation.getPoints(Owner.BOT) > 501)
-        && partyInformation.getPoints(Owner.PLAYER) != partyInformation.getPoints(Owner.BOT)) {
-
-      partyInformation.setOver(true);
-      if (partyInformation.getPoints(Owner.PLAYER) > partyInformation.getPoints(Owner.BOT)) {
-        partyInformation.setWinner(Owner.PLAYER);
-      } else {
-        partyInformation.setWinner(Owner.BOT);
-      }
-    }
+    partyInformation.sumUp();
     if (!partyInformation.isOver()) {
       round = Round.newInstance(round.getWinner());
       partyInformation.setRoundInformation(round.getInformation());

@@ -238,7 +238,7 @@ class Round {
    * @param owner player
    * @return points
    */
-  public int getPoints(Owner owner) {
+  int getPoints(Owner owner) {
     return information.getPoints(owner);
   }
 
