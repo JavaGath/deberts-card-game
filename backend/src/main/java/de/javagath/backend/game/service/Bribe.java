@@ -1,4 +1,4 @@
-package de.javagath.backend.game.model;
+package de.javagath.backend.game.service;
 
 import de.javagath.backend.game.model.deck.Card;
 import de.javagath.backend.game.model.deck.Challenge;
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Ievgenii Izrailtenko
  * @version 1.0
- * @since 1.0*
+ * @since 1.0
  */
 public class Bribe {
 

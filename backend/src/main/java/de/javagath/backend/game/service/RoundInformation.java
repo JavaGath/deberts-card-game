@@ -1,6 +1,5 @@
 package de.javagath.backend.game.service;
 
-import de.javagath.backend.game.model.Bribe;
 import de.javagath.backend.game.model.deck.Card;
 import de.javagath.backend.game.model.deck.Challenge;
 import de.javagath.backend.game.model.deck.Deck;
