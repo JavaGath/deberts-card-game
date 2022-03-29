@@ -28,6 +28,7 @@ import de.javagath.backend.game.service.phase.PhaseFactory;
 class Round {
   private RoundInformation information;
   private Phase phase;
+  private Owner byteOwner = Owner.NOBODY;
 
   private Round(RoundInformation information) {
     this.information = information;
@@ -89,6 +90,15 @@ class Round {
         .trumpDeck(Trump.newInstance(trumpCard))
         .trumpChangePossible(true)
         .build();
+  }
+
+  /**
+   * Returns owner who got Deberts-Byte in the current Round.
+   *
+   * @return Player with byte
+   */
+  Owner getByteOwner() {
+    return byteOwner;
   }
 
   /**
@@ -219,7 +229,12 @@ class Round {
       int totalPoints = score.getPoints(Owner.PLAYER) + score.getPoints(Owner.BOT);
       score.setDefault();
       score.addPoints(winner, totalPoints);
+      byteOwner = getLoser();
     }
+  }
+
+  private Owner getLoser() {
+    return getWinner().equals(Owner.PLAYER) ? Owner.BOT : Owner.PLAYER;
   }
 
   /**
@@ -238,12 +253,12 @@ class Round {
    * @param owner player
    * @return points
    */
-  public int getPoints(Owner owner) {
+  int getPoints(Owner owner) {
     return information.getPoints(owner);
   }
 
   /**
-   * Returns an owner who wins the round.
+   * Returns an owner who won the round.
    *
    * @return winner
    */

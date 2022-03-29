@@ -73,8 +73,16 @@ kubectl get pods -o wide
 6. ~~Trade Phase~~
 7. ~~Combination Phase~~
 8. ~~Action Phase~~
-9. Party
-11. Frontend
-12. DB-Schema
+9. ~~Round sum up~~
+10. Party
+    1. Round history
+    2. Bait
+    3. Bait penalty
+    4. Win
+11. MVN-Infrastructure Frontend
+12. Frontend
+    1. Vue Part
+    2. Rest Controller
+13. DB-Schema
 
 [![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=javagath)](https://github.com/anuraghazra/github-readme-stats)
