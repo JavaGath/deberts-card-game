@@ -99,6 +99,13 @@ public class Combination implements Challengable<Combination> {
 
   @Override
   public int compareToSuit(Combination object, Suit trump) {
+    if (this.isEmpty() && object.isEmpty()) {
+      return 0;
+    } else if (this.isEmpty() && !object.isEmpty()) {
+      return -1;
+    } else if (!this.isEmpty() && object.isEmpty()) {
+      return 1;
+    }
     CardCombination thisCombination = getHighestCardCombination(trump);
     CardCombination otherCombination = object.getHighestCardCombination(trump);
     int compareValue = thisCombination.compareTo(otherCombination);
@@ -114,6 +121,15 @@ public class Combination implements Challengable<Combination> {
     } else {
       return compareValue;
     }
+  }
+
+  /**
+   * Returns true if combination list does not contain any card combinations.
+   *
+   * @return true if combination list is empty
+   */
+  public boolean isEmpty() {
+    return combinationList.isEmpty();
   }
 
   @Override
@@ -182,11 +198,11 @@ public class Combination implements Challengable<Combination> {
      */
     public static boolean isCombination(TreeSet<Card> combinationSet) {
       CombinationName name = CombinationName.getNameByCards(combinationSet.size());
-      List<Card> combinationList = new ArrayList<>(combinationSet);
       if (name == CombinationName.NOTHING) {
         return false;
       }
 
+      List<Card> combinationList = new ArrayList<>(combinationSet);
       for (int i = 1; i < combinationList.size(); i++) {
         Card previous = combinationList.get(i - 1);
         Card current = combinationList.get(i);

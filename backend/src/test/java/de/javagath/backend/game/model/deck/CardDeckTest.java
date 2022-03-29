@@ -17,7 +17,7 @@ class CardDeckTest {
   private Deck firstDeck;
 
   @BeforeEach
-  public void beforeEach() {
+  void beforeEach() {
     firstDeck = DeckFactory.getDeck(Owner.NOBODY);
   }
 

@@ -16,7 +16,6 @@ import de.javagath.backend.game.model.enums.Suit;
 public class HandDeck extends AbstractDeck {
 
   private final int maxCardsNumber;
-  private int containedCards = 0;
 
   /**
    * Creates new {@code CardDeck} entity. During initialisation creates empty {@code SuitPack}s to
@@ -28,6 +27,7 @@ public class HandDeck extends AbstractDeck {
    */
   HandDeck(Owner owner, int maxCardsNumber) {
     this.owner = owner;
+    this.containedCards = 0;
     for (Suit suit : Suit.values()) {
       suitMap.put(suit, SuitPack.newInstance());
     }

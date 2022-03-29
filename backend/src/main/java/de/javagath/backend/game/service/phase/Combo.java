@@ -18,11 +18,11 @@ import de.javagath.backend.game.service.RoundInformation;
  * @version 1.0
  * @since 1.0
  */
-public class Combination implements Phase {
+public class Combo implements Phase {
 
-  private final RoundInformation information;
+  private RoundInformation information;
 
-  Combination(RoundInformation information) {
+  Combo(RoundInformation information) {
     this.information = information;
   }
 
@@ -34,6 +34,7 @@ public class Combination implements Phase {
 
   @Override
   public void decideChallenge(Challenge<?> challenge) {
+
     Owner winner = challenge.getWinner(information.getTrumpSuit());
     Integer points = challenge.getPoints(information.getTrumpSuit());
     information.addCombinationPoints(winner, points);
@@ -50,7 +51,17 @@ public class Combination implements Phase {
   }
 
   @Override
-  public RoundInformation getInformation() {
-    return information;
+  public void setInformation(RoundInformation information) {
+    this.information = information;
+  }
+
+  @Override
+  public boolean isSevenSwitchable() {
+    return information.isSevenSwitchable();
+  }
+
+  @Override
+  public boolean isFourSevenResettable() {
+    return information.isFourSevenResettable();
   }
 }

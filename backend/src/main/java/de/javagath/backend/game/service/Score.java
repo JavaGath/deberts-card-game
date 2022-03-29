@@ -37,8 +37,19 @@ public class Score {
    * @param owner Player or Bot in the party
    * @param points new points to add
    */
-  public void addPoints(Owner owner, Integer points) {
-    Integer newPoints = score.get(owner) + points;
+  public void addPoints(Owner owner, int points) {
+    int newPoints = score.get(owner) + points;
+    score.put(owner, newPoints);
+  }
+
+  /**
+   * Subtracts new points from the owners score.
+   *
+   * @param owner Player or Bot in the party
+   * @param points points to subtract
+   */
+  public void subtractPoints(Owner owner, int points) {
+    int newPoints = score.get(owner) - points;
     score.put(owner, newPoints);
   }
 

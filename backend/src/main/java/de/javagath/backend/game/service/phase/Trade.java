@@ -20,7 +20,7 @@ import de.javagath.backend.game.service.RoundInformation;
  */
 public class Trade implements Phase {
 
-  private final RoundInformation information;
+  private RoundInformation information;
 
   Trade(RoundInformation information) {
     this.information = information;
@@ -28,8 +28,11 @@ public class Trade implements Phase {
 
   @Override
   public Phase switchPhase() {
-    information.setPhaseName(PhaseName.COMBINATION);
-    return new Combination(information);
+    if (information.isTrumpChangePossible()) {
+      throw new IllegalStateException("Trump should be chosen to switch the phase");
+    }
+    information.setPhaseName(PhaseName.COMBO);
+    return new Combo(information);
   }
 
   @Override
@@ -48,7 +51,17 @@ public class Trade implements Phase {
   }
 
   @Override
-  public RoundInformation getInformation() {
-    return information;
+  public void setInformation(RoundInformation information) {
+    this.information = information;
+  }
+
+  @Override
+  public boolean isSevenSwitchable() {
+    return false;
+  }
+
+  @Override
+  public boolean isFourSevenResettable() {
+    return information.isFourSevenResettable();
   }
 }

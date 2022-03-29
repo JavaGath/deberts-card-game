@@ -1,12 +1,16 @@
 package de.javagath.backend.game.service;
 
 import de.javagath.backend.game.model.deck.Card;
+import de.javagath.backend.game.model.deck.Challenge;
 import de.javagath.backend.game.model.deck.Deck;
 import de.javagath.backend.game.model.deck.Trump;
 import de.javagath.backend.game.model.enums.Owner;
 import de.javagath.backend.game.model.enums.PhaseName;
 import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.model.enums.Value;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import lombok.Builder;
 
@@ -23,14 +27,32 @@ import lombok.Builder;
 public class RoundInformation {
   private final Score score = new Score();
   private final Score combinationScore = new Score();
+  @Builder.Default private ArrayList<Challenge<?>> bribeList = new ArrayList<>();
   private Deck cardDeck;
   private Trump trumpDeck;
   private Deck playerDeck;
   private Deck botDeck;
   private boolean trumpChangePossible;
+  @Builder.Default private Owner beginner = Owner.PLAYER;
   @Builder.Default private Owner turn = Owner.PLAYER;
-  private Owner trumpPicker;
+  @Builder.Default private Owner trumpPicker = Owner.NOBODY;
   @Builder.Default private PhaseName phaseName = PhaseName.TRADE;
+
+  @Builder.Default
+  private Map<Owner, Bribe> bribeMap =
+      Map.of(Owner.BOT, new Bribe(Owner.BOT), Owner.PLAYER, new Bribe(Owner.PLAYER));
+
+  /**
+   * Adds challenge to the bribe list of the player.
+   *
+   * @param challenge won challenge
+   * @param owner bribe owner
+   */
+  public void addBribe(Challenge<?> challenge, Owner owner) {
+    Bribe ownerBribe = bribeMap.get(owner);
+    ownerBribe.addChallenge(challenge);
+    bribeList.add(challenge);
+  }
 
   /**
    * Returns combination score of the current {@code Round}. Combination score will be count
@@ -50,6 +72,26 @@ public class RoundInformation {
    */
   public Score getScore() {
     return score;
+  }
+
+  /**
+   * Returns combinations points of the player.
+   *
+   * @param owner player
+   * @return combination points
+   */
+  public int getCombinationPoints(Owner owner) {
+    return combinationScore.getPoints(owner);
+  }
+
+  /**
+   * Returns points of the player.
+   *
+   * @param owner player
+   * @return points
+   */
+  public int getPoints(Owner owner) {
+    return score.getPoints(owner);
   }
 
   /**
@@ -78,7 +120,7 @@ public class RoundInformation {
    * @param owner owner of the deck
    * @return owners deck
    */
-  public Deck getDeckByOwner(Owner owner) {
+  public Deck getPlayerDeck(Owner owner) {
     if (owner.equals(Owner.PLAYER)) {
       return playerDeck;
     } else if (owner.equals(Owner.BOT)) {
@@ -116,15 +158,6 @@ public class RoundInformation {
   }
 
   /**
-   * Sets {@code CardDeck}.
-   *
-   * @param cardDeck new {@code Deck}
-   */
-  public void setCardDeck(Deck cardDeck) {
-    this.cardDeck = cardDeck;
-  }
-
-  /**
    * Returns {@code HandDeck} of the player.
    *
    * @return players {@code HandDeck}
@@ -152,15 +185,6 @@ public class RoundInformation {
   }
 
   /**
-   * Sets {@code Trump}.
-   *
-   * @param trumpDeck {@code Trump} to set
-   */
-  public void setTrumpDeck(Trump trumpDeck) {
-    this.trumpDeck = trumpDeck;
-  }
-
-  /**
    * Returns actual turn in the round.
    *
    * @return actual turn
@@ -176,6 +200,24 @@ public class RoundInformation {
    */
   public void setTurn(Owner turn) {
     this.turn = turn;
+  }
+
+  /**
+   * Returns beginner of the Round.
+   *
+   * @return round beginner
+   */
+  public Owner getBeginner() {
+    return beginner;
+  }
+
+  /**
+   * Sets beginner of the round.
+   *
+   * @param beginner whose begin the round
+   */
+  public void setBeginner(Owner beginner) {
+    this.beginner = beginner;
   }
 
   /**
@@ -244,6 +286,15 @@ public class RoundInformation {
   }
 
   /**
+   * Returns true if trump is not picked and can be chosen.
+   *
+   * @return true if trump is not picked
+   */
+  public boolean isTrumpChangePossible() {
+    return trumpChangePossible;
+  }
+
+  /**
    * Switches a trump seven from the players deck with the trump card. This switch will be declared
    * in the decks contained in this class. This switch is possible only by native trump.
    */
@@ -258,7 +309,7 @@ public class RoundInformation {
 
   private Deck getDeckContainingCard(Suit suit, Value value) {
     if (!contains(suit, value)) {
-      throw new IllegalStateException("Players do not have any trump seven");
+      throw new IllegalStateException("Players do not have any " + suit + " " + value);
     }
 
     return playerDeck.contains(suit, value) ? playerDeck : botDeck;
@@ -269,25 +320,79 @@ public class RoundInformation {
   }
 
   /**
-   * Sums up round score with the combination score. If a player does not have any points,
-   * combination score will not be added.
+   * Sums up round score with the combination score (incl. sweet bribe). If a player does not have
+   * any points, combination score will not be added.
    */
   public void sumUp() {
+    Bribe playerBribe = bribeMap.get(Owner.PLAYER);
+    Bribe botBribe = bribeMap.get(Owner.BOT);
+    int playerSweet = playerBribe.countSweetBride(bribeList);
+    int botSweet = botBribe.countSweetBride(bribeList);
+    int abs = Math.abs(playerSweet - botSweet);
+
+    if (abs != 0) {
+      Bribe sweetSource;
+      Bribe sweetTarget;
+      if (playerSweet > botSweet) {
+        sweetSource = playerBribe;
+        sweetTarget = botBribe;
+      } else {
+        sweetSource = botBribe;
+        sweetTarget = playerBribe;
+      }
+
+      Suit trumpSuit = trumpDeck.getSuit();
+      List<Challenge<?>> sweetBrideList = sweetSource.takeSweetBrideList(abs, trumpSuit);
+
+      for (Challenge<?> sweetChallenge : sweetBrideList) {
+        int points = sweetChallenge.getPoints(trumpSuit);
+        score.addPoints(sweetTarget.getOwner(), points);
+        sweetTarget.addChallenge(sweetChallenge);
+        score.subtractPoints(sweetSource.getOwner(), points);
+      }
+    }
+
     addCombinationScore(Owner.PLAYER);
     addCombinationScore(Owner.BOT);
   }
 
   private void addCombinationScore(Owner owner) {
-    if (score.getPoints(owner) != 0) {
+    Bribe ownersBribe = bribeMap.get(owner);
+    if (!ownersBribe.isEmpty()) {
       score.addPoints(owner, combinationScore.getPoints(owner));
     }
   }
 
+  /** Deals cards to the HandDecks based on the current phase. */
   public void dealCards() {
-    PhaseName name = phaseName;
     for (int i = 0; i < phaseName.getValue(); i++) {
       playerDeck.addCard(cardDeck.dealRandomCard());
       botDeck.addCard(cardDeck.dealRandomCard());
     }
+  }
+
+  /**
+   * Returns true if it is possible to switch a trump seven.
+   *
+   * @return true if possible
+   */
+  public boolean isSevenSwitchable() {
+    return trumpDeck.isNative() && contains(trumpDeck.getSuit(), Value.SEVEN);
+  }
+
+  /**
+   * Returns true if it is possible to reset a round because of four sevens in the hand.
+   *
+   * @return true if player has four sevens in the hand
+   */
+  public boolean isFourSevenResettable() {
+    return (playerDeck.contains(Suit.CLUBS, Value.SEVEN)
+            && playerDeck.contains(Suit.DIAMONDS, Value.SEVEN)
+            && playerDeck.contains(Suit.HEARTS, Value.SEVEN)
+            && playerDeck.contains(Suit.SPADES, Value.SEVEN))
+        || (botDeck.contains(Suit.CLUBS, Value.SEVEN)
+            && botDeck.contains(Suit.DIAMONDS, Value.SEVEN)
+            && botDeck.contains(Suit.HEARTS, Value.SEVEN)
+            && botDeck.contains(Suit.SPADES, Value.SEVEN));
   }
 }

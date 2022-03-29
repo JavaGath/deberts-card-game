@@ -12,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum PhaseName {
   @JsonProperty("action")
   ACTION(0),
-  @JsonProperty("combination")
-  COMBINATION(3),
+  @JsonProperty("combo")
+  COMBO(3),
   @JsonProperty("trade")
   TRADE(6);
 

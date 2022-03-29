@@ -21,7 +21,7 @@ import de.javagath.backend.game.service.RoundInformation;
  */
 public class Action implements Phase {
 
-  private final RoundInformation information;
+  private RoundInformation information;
 
   Action(RoundInformation information) {
     this.information = information;
@@ -42,6 +42,7 @@ public class Action implements Phase {
     int points = challenge.getPoints(information.getTrumpSuit());
     points = addLastHandPoints(points);
     information.addPoints(winner, points);
+    information.addBribe(challenge, winner);
   }
 
   @Override
@@ -55,8 +56,18 @@ public class Action implements Phase {
   }
 
   @Override
-  public RoundInformation getInformation() {
-    return information;
+  public void setInformation(RoundInformation information) {
+    this.information = information;
+  }
+
+  @Override
+  public boolean isSevenSwitchable() {
+    return false;
+  }
+
+  @Override
+  public boolean isFourSevenResettable() {
+    return false;
   }
 
   private void removePlayedCards(Card attacker, Card defender) {

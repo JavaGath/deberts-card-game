@@ -20,7 +20,7 @@ public class Party {
 
   private Party() {
     round = Round.newInstance(Owner.NOBODY);
-    this.partyInformation = new PartyInformation(round.getInformation());
+    this.partyInformation = PartyInformation.newInstance(round.getInformation());
   }
 
   /**
@@ -62,16 +62,18 @@ public class Party {
   public void playTurn(Challenge<?> challenge) {
     round.decideChallenge(challenge);
     if (round.isOver()) {
-      endRound();
+      sumUp();
     }
   }
 
-  void endRound() {
+  private void sumUp() {
     round.sumUp();
-    Owner dealer = round.getWinner().equals(Owner.BOT) ? Owner.BOT : Owner.PLAYER;
-    round = Round.newInstance(dealer);
-    partyInformation.addCurrentScore();
-    partyInformation.setRoundInformation(round.getInformation());
+    partyInformation.addByte(round.getByteOwner());
+    partyInformation.sumUp();
+    if (!partyInformation.isOver()) {
+      round = Round.newInstance(round.getWinner());
+      partyInformation.setRoundInformation(round.getInformation());
+    }
   }
 
   /**
@@ -87,9 +89,5 @@ public class Party {
   /** Switches trump seven from the players hand with it and the current trump card. */
   public void switchTrumpSeven() {
     round.switchTrumpSeven();
-  }
-
-  Round getRound() {
-    return round;
   }
 }

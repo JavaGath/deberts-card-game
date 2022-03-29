@@ -15,19 +15,48 @@ import java.util.List;
 public class PartyInformation {
   private final Score score = new Score();
   private final List<Score> roundScoreHistory = new LinkedList<>();
+  private final ByteStatistic byteStatistic;
   private RoundInformation roundInformation;
+  private boolean over = false;
+  private Owner winner = Owner.NOBODY;
 
-  PartyInformation(RoundInformation roundInformation) {
+  private PartyInformation(RoundInformation roundInformation, ByteStatistic byteStatistic) {
+    this.byteStatistic = byteStatistic;
     this.roundInformation = roundInformation;
   }
 
+  static PartyInformation newInstance(RoundInformation roundInformation) {
+    ByteStatistic statistic = ByteStatistic.newInstance(Owner.PLAYER, Owner.BOT);
+    return new PartyInformation(roundInformation, statistic);
+  }
+
   /**
-   * Returns score of the current {@code Party}.
+   * Adds a number of bytes to the owner.
    *
-   * @return current combinations score
+   * @param owner who gets the byte
    */
-  Score getScore() {
-    return score;
+  void addByte(Owner owner) {
+    if (!owner.equals(Owner.NOBODY)) {
+      byteStatistic.addByte(owner, roundScoreHistory.size() + 1);
+    }
+  }
+
+  /**
+   * Returns true if one player gets 501 points.
+   *
+   * @return returns true if round is over
+   */
+  boolean isOver() {
+    return over;
+  }
+
+  /**
+   * Returns the winner of the party. While Party is not over returns {@code Owner.NOBODY}.
+   *
+   * @return winner of the current party
+   */
+  Owner getWinner() {
+    return winner;
   }
 
   /**
@@ -57,11 +86,34 @@ public class PartyInformation {
     this.roundInformation = roundInformation;
   }
 
-  /** Adds score of the current round to the party score and declares it the round history. */
-  void addCurrentScore() {
+  /**
+   * Adds score of the current round to the party score, declares it the round history and checks
+   * the last game possibility.
+   */
+  void sumUp() {
     Score roundScore = roundInformation.getScore();
+    if (byteStatistic.isBytePenalty()) {
+      Owner penaltyOwner = byteStatistic.getBytePenaltyOwner();
+      roundScore.addPoints(penaltyOwner, -100);
+      byteStatistic.playBytePenalty(penaltyOwner);
+    }
+
     roundScoreHistory.add(roundScore);
     score.addPoints(Owner.BOT, roundScore.getPoints(Owner.BOT));
     score.addPoints(Owner.PLAYER, roundScore.getPoints(Owner.PLAYER));
+
+    if (isLastGame()) {
+      over = true;
+      winner = decideWinner();
+    }
+  }
+
+  private Owner decideWinner() {
+    return score.getPoints(Owner.PLAYER) > score.getPoints(Owner.BOT) ? Owner.PLAYER : Owner.BOT;
+  }
+
+  private boolean isLastGame() {
+    return !score.getPoints(Owner.BOT).equals(score.getPoints(Owner.PLAYER))
+        && (score.getPoints(Owner.PLAYER) > 501 || score.getPoints(Owner.BOT) > 501);
   }
 }

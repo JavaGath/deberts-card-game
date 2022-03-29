@@ -2,33 +2,20 @@ package de.javagath.backend.game.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import de.javagath.backend.game.model.deck.Card;
+import de.javagath.backend.game.model.deck.Challenge;
 import de.javagath.backend.game.model.deck.Deck;
 import de.javagath.backend.game.model.enums.Owner;
 import de.javagath.backend.game.model.enums.Suit;
+import de.javagath.backend.game.model.enums.Value;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SuppressWarnings("javadoc")
 @SpringBootTest
 public class PartyTest {
-
-  @Test
-  void newInstance_newPartyWithTheFirstRound_eachPlayerHas6CardsInTheHand() {
-    int expectedCardNumber = 12;
-
-    Party newParty = Party.newInstance();
-    PartyInformation information = newParty.getPartyInformation();
-
-    assertThat(information.getRoundInformation().countHandCards()).isEqualTo(expectedCardNumber);
-  }
-
-  @Test
-  void newInstance_newPartyWithTheFirstRound_trumpDeckIsNotEmpty() {
-    Party newParty = Party.newInstance();
-    PartyInformation information = newParty.getPartyInformation();
-
-    assertThat(information.getRoundInformation().getTrumpDeck().getSuit()).isInstanceOf(Suit.class);
-  }
 
   @Test
   void newInstance_newPartyWithTheFirstRound_roundHasBeginner() {
@@ -40,8 +27,12 @@ public class PartyTest {
 
   @Test
   void playTurn_secondRoundInTheParty_winnerDealsCards() {
+    int expectedRoundNumber = 1;
     int expectedCardNumber = 12;
     Owner expectedWinner = Owner.PLAYER;
+    Owner expectedLoser = Owner.BOT;
+    Card winnerCard = Card.newInstance(Suit.DIAMONDS, Value.ACE);
+    Card loserCard = Card.newInstance(Suit.DIAMONDS, Value.TEN);
     Party newParty = Party.newInstance();
     PartyInformation information = newParty.getPartyInformation();
     RoundInformation roundInformation = information.getRoundInformation();
@@ -51,13 +42,99 @@ public class PartyTest {
     newParty.playTrump(Suit.HEARTS, Owner.PLAYER);
     newParty.switchPhase();
     newParty.switchPhase();
-    while (roundInformation.countHandCards() != 0) {
+    while (roundInformation.countHandCards() > 0) {
       playerDeck.dealRandomCard();
       botDeck.dealRandomCard();
     }
+    playerDeck.addCard(winnerCard);
+    botDeck.addCard(loserCard);
     roundInformation.addPoints(expectedWinner, 100);
-    newParty.endRound();
+    Challenge<Card> challenge = new Challenge<>();
+    challenge.setAttacker(expectedWinner);
+    challenge.setDefender(expectedLoser);
+    challenge.setAttackerValue(winnerCard);
+    challenge.setDefenderValue(loserCard);
+    newParty.playTurn(challenge);
+
     assertThat(information.getRoundInformation().countHandCards()).isEqualTo(expectedCardNumber);
     assertThat(information.getRoundInformation().getTurn()).isEqualTo(expectedWinner);
+    assertThat(information.getRoundScoreHistory().size()).isEqualTo(expectedRoundNumber);
+  }
+
+  @ParameterizedTest(name = "{index} => a={0}, b={1}")
+  @CsvSource({"PLAYER, BOT", "BOT, PLAYER"})
+  void playTurn_finalRoundInTheParty_firstOwnerWins(Owner winner, Owner loser) {
+    int expectedRoundNumber = 1;
+    int expectedCardNumber = 0;
+    Card winnerCard = Card.newInstance(Suit.DIAMONDS, Value.ACE);
+    Card loserCard = Card.newInstance(Suit.DIAMONDS, Value.TEN);
+    Party newParty = Party.newInstance();
+    PartyInformation information = newParty.getPartyInformation();
+    RoundInformation roundInformation = information.getRoundInformation();
+    Deck playerDeck = information.getRoundInformation().getPlayerDeck();
+    Deck botDeck = information.getRoundInformation().getBotDeck();
+
+    newParty.playTrump(Suit.HEARTS, Owner.PLAYER);
+    newParty.switchPhase();
+    newParty.switchPhase();
+    while (roundInformation.countHandCards() > 0) {
+      playerDeck.dealRandomCard();
+      botDeck.dealRandomCard();
+    }
+    playerDeck.addCard(winnerCard);
+    botDeck.addCard(loserCard);
+    roundInformation.addPoints(winner, 502);
+    Challenge<Card> challenge = new Challenge<>();
+    challenge.setAttacker(winner);
+    challenge.setDefender(loser);
+    challenge.setAttackerValue(winnerCard);
+    challenge.setDefenderValue(loserCard);
+    newParty.playTurn(challenge);
+
+    assertThat(information.getRoundInformation().countHandCards()).isEqualTo(expectedCardNumber);
+    assertThat(information.getWinner()).isEqualTo(winner);
+    assertThat(information.getRoundScoreHistory().size()).isEqualTo(expectedRoundNumber);
+  }
+
+  @Test
+  void playTurn_fourthRoundInTheParty_botGotBytePenalty() {
+    Integer bytePenalty = -100;
+    Owner expectedWinner = Owner.PLAYER;
+    Owner expectedLoser = Owner.BOT;
+    Party newParty = Party.newInstance();
+    PartyInformation information = newParty.getPartyInformation();
+
+    for (int i = 0; i < 3; i++) {
+      RoundInformation roundInformation = information.getRoundInformation();
+      Deck playerDeck = information.getRoundInformation().getPlayerDeck();
+      Deck botDeck = information.getRoundInformation().getBotDeck();
+
+      if (roundInformation.getTrumpSuit().equals(Suit.HEARTS)) {
+        newParty.playTrump(Suit.SPADES, expectedLoser);
+      } else {
+        newParty.playTrump(Suit.HEARTS, expectedLoser);
+      }
+
+      newParty.switchPhase();
+      newParty.switchPhase();
+      while (roundInformation.countHandCards() > 2) {
+        playerDeck.dealRandomCard();
+        botDeck.dealRandomCard();
+      }
+      Card winnerCard = playerDeck.dealRandomCard();
+      Card loserCard = botDeck.dealRandomCard();
+      playerDeck.addCard(winnerCard);
+      botDeck.addCard(loserCard);
+      roundInformation.addPoints(expectedWinner, 100);
+      Challenge<Card> challenge = new Challenge<>();
+      challenge.setAttacker(expectedWinner);
+      challenge.setDefender(expectedLoser);
+      challenge.setAttackerValue(winnerCard);
+      challenge.setDefenderValue(loserCard);
+      newParty.playTurn(challenge);
+    }
+
+    assertThat(information.getRoundScoreHistory().get(2).getPoints(expectedLoser))
+        .isEqualTo(bytePenalty);
   }
 }
