@@ -15,12 +15,30 @@ import java.util.List;
 public class PartyInformation {
   private final Score score = new Score();
   private final List<Score> roundScoreHistory = new LinkedList<>();
+  private final ByteStatistic byteStatistic;
   private RoundInformation roundInformation;
   private boolean over = false;
   private Owner winner = Owner.NOBODY;
 
-  PartyInformation(RoundInformation roundInformation) {
+  private PartyInformation(RoundInformation roundInformation, ByteStatistic byteStatistic) {
+    this.byteStatistic = byteStatistic;
     this.roundInformation = roundInformation;
+  }
+
+  static PartyInformation newInstance(RoundInformation roundInformation) {
+    ByteStatistic statistic = ByteStatistic.newInstance(Owner.PLAYER, Owner.BOT);
+    return new PartyInformation(roundInformation, statistic);
+  }
+
+  /**
+   * Adds a number of bytes to the owner.
+   *
+   * @param owner who gets the byte
+   */
+  void addByte(Owner owner) {
+    if (!owner.equals(Owner.NOBODY)) {
+      byteStatistic.addByte(owner, roundScoreHistory.size() + 1);
+    }
   }
 
   /**
@@ -74,9 +92,16 @@ public class PartyInformation {
    */
   void sumUp() {
     Score roundScore = roundInformation.getScore();
+    if (byteStatistic.isBytePenalty()) {
+      Owner penaltyOwner = byteStatistic.getBytePenaltyOwner();
+      roundScore.addPoints(penaltyOwner, -100);
+      byteStatistic.playBytePenalty(penaltyOwner);
+    }
+
     roundScoreHistory.add(roundScore);
     score.addPoints(Owner.BOT, roundScore.getPoints(Owner.BOT));
     score.addPoints(Owner.PLAYER, roundScore.getPoints(Owner.PLAYER));
+
     if (isLastGame()) {
       over = true;
       winner = decideWinner();

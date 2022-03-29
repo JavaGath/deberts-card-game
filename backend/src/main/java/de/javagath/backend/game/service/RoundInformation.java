@@ -35,7 +35,7 @@ public class RoundInformation {
   private boolean trumpChangePossible;
   @Builder.Default private Owner beginner = Owner.PLAYER;
   @Builder.Default private Owner turn = Owner.PLAYER;
-  private Owner trumpPicker;
+  @Builder.Default private Owner trumpPicker = Owner.NOBODY;
   @Builder.Default private PhaseName phaseName = PhaseName.TRADE;
 
   @Builder.Default

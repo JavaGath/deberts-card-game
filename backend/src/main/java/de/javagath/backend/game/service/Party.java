@@ -20,7 +20,7 @@ public class Party {
 
   private Party() {
     round = Round.newInstance(Owner.NOBODY);
-    this.partyInformation = new PartyInformation(round.getInformation());
+    this.partyInformation = PartyInformation.newInstance(round.getInformation());
   }
 
   /**
@@ -68,6 +68,7 @@ public class Party {
 
   private void sumUp() {
     round.sumUp();
+    partyInformation.addByte(round.getByteOwner());
     partyInformation.sumUp();
     if (!partyInformation.isOver()) {
       round = Round.newInstance(round.getWinner());

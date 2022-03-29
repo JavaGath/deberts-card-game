@@ -52,7 +52,7 @@ class ByteStatistic {
   void addByte(Owner owner, Integer roundNumber) {
     Integer newActiveBytes = activeBytes.get(owner) + 1;
     activeBytes.put(owner, newActiveBytes);
-    totalBytes.get(Owner.PLAYER).add(roundNumber);
+    totalBytes.get(owner).add(roundNumber);
   }
 
   /**

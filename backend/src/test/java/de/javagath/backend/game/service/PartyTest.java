@@ -63,7 +63,7 @@ public class PartyTest {
 
   @ParameterizedTest(name = "{index} => a={0}, b={1}")
   @CsvSource({"PLAYER, BOT", "BOT, PLAYER"})
-  void playTurn_finalRoundInTheParty_playerWins(Owner winner, Owner loser) {
+  void playTurn_finalRoundInTheParty_firstOwnerWins(Owner winner, Owner loser) {
     int expectedRoundNumber = 1;
     int expectedCardNumber = 0;
     Card winnerCard = Card.newInstance(Suit.DIAMONDS, Value.ACE);
@@ -94,5 +94,47 @@ public class PartyTest {
     assertThat(information.getRoundInformation().countHandCards()).isEqualTo(expectedCardNumber);
     assertThat(information.getWinner()).isEqualTo(winner);
     assertThat(information.getRoundScoreHistory().size()).isEqualTo(expectedRoundNumber);
+  }
+
+  @Test
+  void playTurn_fourthRoundInTheParty_botGotBytePenalty() {
+    Integer bytePenalty = -100;
+    Owner expectedWinner = Owner.PLAYER;
+    Owner expectedLoser = Owner.BOT;
+    Party newParty = Party.newInstance();
+    PartyInformation information = newParty.getPartyInformation();
+
+    for (int i = 0; i < 3; i++) {
+      RoundInformation roundInformation = information.getRoundInformation();
+      Deck playerDeck = information.getRoundInformation().getPlayerDeck();
+      Deck botDeck = information.getRoundInformation().getBotDeck();
+
+      if (roundInformation.getTrumpSuit().equals(Suit.HEARTS)) {
+        newParty.playTrump(Suit.SPADES, expectedLoser);
+      } else {
+        newParty.playTrump(Suit.HEARTS, expectedLoser);
+      }
+
+      newParty.switchPhase();
+      newParty.switchPhase();
+      while (roundInformation.countHandCards() > 2) {
+        playerDeck.dealRandomCard();
+        botDeck.dealRandomCard();
+      }
+      Card winnerCard = playerDeck.dealRandomCard();
+      Card loserCard = botDeck.dealRandomCard();
+      playerDeck.addCard(winnerCard);
+      botDeck.addCard(loserCard);
+      roundInformation.addPoints(expectedWinner, 100);
+      Challenge<Card> challenge = new Challenge<>();
+      challenge.setAttacker(expectedWinner);
+      challenge.setDefender(expectedLoser);
+      challenge.setAttackerValue(winnerCard);
+      challenge.setDefenderValue(loserCard);
+      newParty.playTurn(challenge);
+    }
+
+    assertThat(information.getRoundScoreHistory().get(2).getPoints(expectedLoser))
+        .isEqualTo(bytePenalty);
   }
 }
