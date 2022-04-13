@@ -5,6 +5,18 @@
 
 
   <artifactId>deberts-card-game</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>18</source>
+          <target>18</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+    </plugins>
+  </build>
   <description>Deberts project based on spring-boot and vue.js</description>
   <groupId>de.java-gath</groupId>
   <modelVersion>4.0.0</modelVersion>
