@@ -1,20 +1,28 @@
 <template>
   <div class="home">
-    <nav>
-      <router-link to="/"> Home </router-link> |
-      <router-link to="/login"> Sign In </router-link> |
-      <router-link to="/sign-up"> Sign Up </router-link>
-    </nav>
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <nav>
-      <router-link to="/"> About </router-link>
-    </nav>
+    <NavBar class="top" :right-menu="rightMenuTop"></NavBar>
+    <NavBar class="bot" :right-menu="rightMenuBot"></NavBar>
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar'
+import '@/assets/styles/main.css'
+
 export default {
-  name: 'HomeView'
+  name: 'HomeView',
+  components: {
+    NavBar
+  },
+  data: function () {
+    return {
+      rightMenuTop: [
+        { name: 'login', text: 'Sign In', router: true },
+        { name: 'signUp', text: 'Sign Up', router: true }
+      ],
+      rightMenuBot: [{ name: '', text: 'Menu', router: false }]
+    }
+  }
 }
 </script>
 

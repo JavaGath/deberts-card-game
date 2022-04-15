@@ -1,5 +1,7 @@
 <template>
   <div class="login">
+    <NavBar class="top" :right-menu="rightMenuTop"></NavBar>
+    <NavBar class="bot" :right-menu="rightMenuBot"></NavBar>
     <h1>Sign in to deberts</h1>
     <LoginForm msg="Welcome to Your Vue.js App" />
   </div>
@@ -7,11 +9,19 @@
 
 <script>
 import LoginForm from '@/components/LoginForm.vue'
+import NavBar from '@/components/NavBar'
 
 export default {
   name: 'LoginView',
   components: {
-    LoginForm
+    LoginForm,
+    NavBar
+  },
+  data: function () {
+    return {
+      rightMenuTop: [{ name: 'signUp', text: 'Sign Up', router: true }],
+      rightMenuBot: []
+    }
   }
 }
 </script>
