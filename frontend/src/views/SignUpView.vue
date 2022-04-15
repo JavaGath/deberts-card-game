@@ -1,7 +1,15 @@
 <template>
   <div class="sign-up">
-    <NavBar class="top" :right-menu="rightMenuTop"></NavBar>
-    <NavBar class="bot" :right-menu="rightMenuBot"></NavBar>
+    <NavBar
+      class="top"
+      :right-menu="rightMenuTop"
+      :html-type="'header'"
+    ></NavBar>
+    <NavBar
+      class="bot"
+      :right-menu="rightMenuBot"
+      :html-type="'footer'"
+    ></NavBar>
     <h1>Here we go</h1>
   </div>
 </template>

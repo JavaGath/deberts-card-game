@@ -1,7 +1,15 @@
 <template>
   <div class="login">
-    <NavBar class="top" :right-menu="rightMenuTop"></NavBar>
-    <NavBar class="bot" :right-menu="rightMenuBot"></NavBar>
+    <NavBar
+      class="top"
+      :right-menu="rightMenuTop"
+      :html-type="'header'"
+    ></NavBar>
+    <NavBar
+      class="bot"
+      :right-menu="rightMenuBot"
+      :html-type="'footer'"
+    ></NavBar>
     <h1>Sign in to deberts</h1>
     <LoginForm msg="Welcome to Your Vue.js App" />
   </div>

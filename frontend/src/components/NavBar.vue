@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <component :is="htmlType" class="bar" :class="htmlType">
     <div v-for="(button, index) in rightMenu" :key="index">
       <div v-if="button.router === true">
         <router-link class="menu" :to="{ name: button.name }">{{
@@ -10,7 +10,7 @@
         <a class="menu">{{ button.text }}</a>
       </div>
     </div>
-  </div>
+  </component>
 </template>
 
 <script>
@@ -20,6 +20,10 @@ export default {
   props: {
     rightMenu: {
       type: Array,
+      required: true
+    },
+    htmlType: {
+      type: String,
       required: true
     }
   }
