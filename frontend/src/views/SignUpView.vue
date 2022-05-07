@@ -5,22 +5,24 @@
       :right-menu="rightMenuTop"
       :html-type="'header'"
     ></NavBar>
+    <SignUpForm class="form-center"></SignUpForm>
     <NavBar
       class="bot"
       :right-menu="rightMenuBot"
       :html-type="'footer'"
     ></NavBar>
-    <h1>Here we go</h1>
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar'
+import SignUpForm from '@/components/SignUpForm'
 
 export default {
   name: 'SignUpView',
   components: {
-    NavBar
+    NavBar,
+    SignUpForm
   },
   data: function () {
     return {
@@ -30,5 +32,3 @@ export default {
   }
 }
 </script>
-
-<style scoped></style>
