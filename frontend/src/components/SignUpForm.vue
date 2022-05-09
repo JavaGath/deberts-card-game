@@ -1,14 +1,30 @@
 <template>
   <div class="form-center">
-    <form>
+    <form @submit.prevent="registry">
       <h1>¯\_(ツ)_/¯</h1>
-      <BaseInput label="Username" input-type="text"></BaseInput>
-      <BaseInput label="Email address" input-type="email"></BaseInput>
-      <BaseInput label="Password" input-type="password"></BaseInput>
-      <BaseInput label="Repeat your password" input-type="password"></BaseInput>
       <BaseInput
-        input-type="submit"
-        input-value="Leak Data (づ｡◕‿‿◕｡)づ"
+        v-model="registrationData.username"
+        label="Username"
+        model-type="text"
+      ></BaseInput>
+      <BaseInput
+        v-model="registrationData.email"
+        label="Email address"
+        model-type="email"
+      ></BaseInput>
+      <BaseInput
+        v-model="registrationData.password"
+        label="Password"
+        model-type="password"
+      ></BaseInput>
+      <BaseInput
+        v-model="registrationData.passwordCheck"
+        label="repeat your password"
+        model-type="password"
+      ></BaseInput>
+      <BaseInput
+        model-type="submit"
+        model-value="Leak data (づ｡◕‿‿◕｡)づ"
       ></BaseInput>
     </form>
   </div>
@@ -21,6 +37,21 @@ export default {
   name: 'RegistryForm',
   components: {
     BaseInput
+  },
+  data() {
+    return {
+      registrationData: {
+        username: '',
+        email: '',
+        password: '',
+        passwordCheck: ''
+      }
+    }
+  },
+  methods: {
+    registry() {
+      console.log(this.registrationData)
+    }
   }
 }
 </script>

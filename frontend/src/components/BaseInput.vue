@@ -1,11 +1,19 @@
 <template>
   <label :for="newID"> {{ label }}</label>
   <br />
-  <input :type="inputType" :value="inputValue" />
+  <input
+    :type="modelType"
+    :value="modelValue"
+    v-bind="{
+      ...$attrs,
+      onInput: updateValue
+    }"
+  />
 </template>
 
 <script>
 import NewID from '@/util/NewID'
+import SetupFormComponent from '@/util/SetupFormComponent'
 
 export default {
   name: 'BaseInput',
@@ -14,19 +22,19 @@ export default {
       type: String,
       default: ''
     },
-    inputType: {
+    modelType: {
       type: String,
       required: true
     },
-    inputValue: {
+    modelValue: {
       type: [String, Number],
       default: ''
     }
   },
-  setup() {
+  setup(props, context) {
+    const { updateValue } = SetupFormComponent(props, context)
     const newID = NewID().getID()
-
-    return { newID }
+    return { newID, updateValue }
   }
 }
 </script>

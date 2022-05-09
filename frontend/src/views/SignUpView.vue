@@ -24,7 +24,7 @@ export default {
     NavBar,
     SignUpForm
   },
-  data: function () {
+  data() {
     return {
       rightMenuTop: [{ name: 'login', text: 'Sign In', router: true }],
       rightMenuBot: []
