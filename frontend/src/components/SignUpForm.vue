@@ -32,6 +32,7 @@
 
 <script>
 import BaseInput from '@/components/BaseInput'
+import DebertsService from '@/services/DebertsService'
 
 export default {
   name: 'RegistryForm',
@@ -51,6 +52,14 @@ export default {
   methods: {
     registry() {
       console.log(this.registrationData)
+
+      DebertsService.test(this.registrationData).then((response) => {
+        if (response.status === 200) {
+          console.log('I DID IT YEEEEE')
+        } else {
+          console.log('Oups :(')
+        }
+      })
     }
   }
 }
