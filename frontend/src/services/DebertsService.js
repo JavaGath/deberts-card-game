@@ -8,7 +8,8 @@ const apiClient = axios.create({
 })
 
 export default {
-  test(body) {
+  signUp(body) {
+    console.log(body)
     return apiClient.post('http://localhost:8080/user/signup', body)
   }
 }

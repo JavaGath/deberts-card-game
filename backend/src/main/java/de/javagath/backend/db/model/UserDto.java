@@ -1,4 +1,4 @@
-package de.javagath.backend.web.model;
+package de.javagath.backend.db.model;
 
 public class UserDto {
   private String name;

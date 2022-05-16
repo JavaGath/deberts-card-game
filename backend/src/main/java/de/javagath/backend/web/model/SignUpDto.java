@@ -1,17 +1,16 @@
 package de.javagath.backend.web.model;
 
 public class SignUpDto {
-
-  private String name;
+  private String username;
   private String email;
   private String password;
 
-  public String getName() {
-    return name;
+  public String getUsername() {
+    return username;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setUsername(String name) {
+    this.username = name;
   }
 
   public String getEmail() {
@@ -32,7 +31,7 @@ public class SignUpDto {
 
   @Override
   public int hashCode() {
-    int result = getName().hashCode();
+    int result = getUsername().hashCode();
     result = 31 * result + getEmail().hashCode();
     result = 31 * result + getPassword().hashCode();
     return result;
@@ -49,7 +48,7 @@ public class SignUpDto {
 
     SignUpDto signUpDto = (SignUpDto) o;
 
-    if (!getName().equals(signUpDto.getName())) {
+    if (!getUsername().equals(signUpDto.getUsername())) {
       return false;
     }
     if (!getEmail().equals(signUpDto.getEmail())) {
@@ -61,8 +60,8 @@ public class SignUpDto {
   @Override
   public String toString() {
     return "SignUpDto{"
-        + "name='"
-        + name
+        + "username='"
+        + username
         + '\''
         + ", email='"
         + email

@@ -18,9 +18,8 @@ form {
     background-color: rgba(246, 248, 250, 0.93);
     padding: 15px;
     border-radius: 5px;
+    width: 230px;
 }
-
-
 
 .form-center {
     display: flex;
