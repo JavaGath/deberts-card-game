@@ -7,17 +7,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class AuthConfig extends WebSecurityConfigurerAdapter {
-
+public class WebSecurity extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.httpBasic() // Basic Authentication for the beginning
+    http.httpBasic()
         .and()
         .authorizeRequests()
-        .antMatchers("/", "/**")
-        .permitAll() // White-list for all Endpoints in the Beginning
-        .anyRequest()
+        .antMatchers("/private/**")
         .authenticated()
-        .and();
+        .antMatchers("/**")
+        .permitAll()
+        .and()
+        .csrf()
+        .disable();
+    ;
   }
 }

@@ -15,7 +15,7 @@ public class UserRegistrar {
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
   private static final String PEPPER_VALUE = "G8pfjFp34fLBew1eg5k";
 
-  void registry(SignUpDto signUpDto) {
+  public void registry(SignUpDto signUpDto) {
     UserDto newUser = new UserDto();
     newUser.setName(signUpDto.getUsername());
     newUser.setEmail(signUpDto.getEmail());
