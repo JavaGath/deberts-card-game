@@ -8,6 +8,8 @@ $do$
             GRANT ALL PRIVILEGES ON DATABASE postgres TO deberts;
             GRANT SELECT ON ALL TABLES IN SCHEMA public TO deberts;
             GRANT UPDATE ON ALL TABLES IN SCHEMA public TO deberts;
+            GRANT INSERT ON ALL TABLES IN SCHEMA public TO deberts;
+            GRANT DELETE ON ALL TABLES IN SCHEMA public TO deberts;
             GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO deberts;
             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to deberts;
         END IF;
