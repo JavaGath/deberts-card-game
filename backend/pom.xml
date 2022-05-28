@@ -85,6 +85,23 @@
       <groupId>org.assertj</groupId>
       <version>${assertjVersion}</version>
     </dependency>
+    <dependency>
+      <artifactId>jjwt-api</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <version>${jjwtVersion}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-impl</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <scope>runtime</scope>
+      <version>${jjwtVersion}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-jackson</artifactId>
+      <groupId>io.jsonwebtoken</groupId> <!-- or jjwt-gson if Gson is preferred -->
+      <scope>runtime</scope>
+      <version>${jjwtVersion}</version>
+    </dependency>
 
     <dependency>
       <artifactId>lombok</artifactId>

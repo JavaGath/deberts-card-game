@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRegistrar {
 
+  static final String bcryptInfo = "$2a$10$";
+  private static final String PEPPER = "G8pfjFp34fLBew1eg5k";
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
-  private static final String PEPPER = "G8pfjFp34fLBew1eg5k";
-  private static final String bcryptInfo = "$2a$10$";
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
   private SessionFactory hibernateFactory;
 
   @Autowired
@@ -33,35 +32,33 @@ public class UserRegistrar {
   }
 
   public void registry(SignUpDto signUpDto) {
-    LOG.info("Plain Password: " + signUpDto.getPassword());
-    UserEntity newUser = new UserEntity();
-    newUser.setName(signUpDto.getUsername());
-    newUser.setEmail(signUpDto.getEmail());
-    String salt = BCrypt.gensalt();
-    LOG.info("Generated Salt: " + salt);
-    newUser.setSalt(salt.substring(bcryptInfo.length()));
-    // ToDo: Create own method
-    Integer passwordValue = signUpDto.getPassword().hashCode() + PEPPER.hashCode();
-    LOG.info("Password with Pepper in hash: " + passwordValue);
-    String password = BCrypt.hashpw(passwordValue.toString(), salt);
-    LOG.info("BcryptPassword: " + password);
-    String passwordEncoded = passwordEncoder.encode(password);
-    LOG.info("Password encoded: " + passwordEncoded);
-    String passwordDb = passwordEncoded.substring(bcryptInfo.length());
-    LOG.info("Password to Store: " + passwordDb);
-    // End of the method
-    newUser.setPassword(passwordDb);
-    // ToDo: Create Unittest
-    boolean test =
-        passwordEncoder.matches(
-            BCrypt.hashpw(
-                passwordValue.toString(), bcryptInfo + salt.substring(bcryptInfo.length())),
-            bcryptInfo + passwordDb);
-    LOG.info("PasswordTest:" + test);
+
+    UserEntity newUser = createUserEntity(signUpDto);
 
     Session session = hibernateFactory.openSession();
     LOG.info("Test Save Begin!");
     session.save(newUser);
     LOG.info("Test Save End!");
+  }
+
+  private String encodePassword(String password, String salt) {
+    LOG.debug("Plain Password: " + password);
+    Integer passwordValue = password.hashCode() + PEPPER.hashCode();
+    String passwordBcrypt = BCrypt.hashpw(passwordValue.toString(), salt);
+    String passwordEncoded = passwordEncoder.encode(passwordBcrypt);
+    String passwordReady = passwordEncoded.substring(bcryptInfo.length());
+    LOG.debug("Password to Store: " + passwordReady);
+    return passwordReady;
+  }
+
+  private UserEntity createUserEntity(SignUpDto signUpDto) {
+    UserEntity newUser = new UserEntity();
+    newUser.setName(signUpDto.getUsername());
+    newUser.setEmail(signUpDto.getEmail());
+    String salt = BCrypt.gensalt();
+    newUser.setSalt(salt.substring(bcryptInfo.length()));
+    String password = encodePassword(signUpDto.getPassword(), salt);
+    newUser.setPassword(password);
+    return newUser;
   }
 }

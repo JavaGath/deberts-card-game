@@ -39,6 +39,7 @@
     <execVersion>3.0.0</execVersion>
     <frontendpluginVersion>1.11.2</frontendpluginVersion>
     <java.version>18</java.version>
+    <jjwtVersion>0.11.5</jjwtVersion>
     <main.basedir>${project.basedir}</main.basedir>
     <maven.compiler.source>18</maven.compiler.source>
     <maven.compiler.target>18</maven.compiler.target>

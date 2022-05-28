@@ -63,6 +63,24 @@ kubectl apply -f deberts-game.yaml
 kubectl get pods -o wide  
 ```
 
+### Keystore
+
+To generate Keystore with private key:
+
+```
+keytool -genkey -alias debertskey -keyalg RSA -keystore deberts.jks -keysize 2048
+```
+
+<br>CN=Ievgenii Izrailtenko
+<br>OU=JavaGath
+<br>O=JavaGathOrg
+<br>L=Erkrath
+<br>ST=NRW
+<br>C=DE
+<br>Password=deberts123
+
+After that we have to generate a certificate for the public key
+
 ### Actual ToDo's:
 
 1. ~~Run project using docker~~
@@ -75,7 +93,7 @@ kubectl get pods -o wide
 8. ~~Action Phase~~
 9. ~~Round sum up~~
 10. ~~Party~~
-11. MVN-Infrastructure Frontend
+11. ~~MVN-Infrastructure Frontend~~
 12. Security
 13. DB-Schema
 14. Save/Load

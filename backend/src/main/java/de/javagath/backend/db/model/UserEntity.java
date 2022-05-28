@@ -1,5 +1,6 @@
 package de.javagath.backend.db.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,9 +38,11 @@ public class UserEntity {
   private String email;
 
   @Column(name = "usr_salt")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String salt;
 
   @Column(name = "usr_password")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @Column(name = "usr_last_game_result")
