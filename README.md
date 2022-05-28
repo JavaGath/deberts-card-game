@@ -95,6 +95,10 @@ After that we have to generate a certificate for the public key
 10. ~~Party~~
 11. ~~MVN-Infrastructure Frontend~~
 12. Security
+    1. ~~Store password in DB~~
+    2. Create JWT
+    3. Use JWT for Authentication (via filter)
+    4. Use Backend generated JWT in Vue
 13. DB-Schema
 14. Save/Load
 15. Frontend
