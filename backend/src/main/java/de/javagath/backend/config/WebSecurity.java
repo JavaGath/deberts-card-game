@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -15,12 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-  private JwtTokenFilter jwtTokenFilter;
+  @Autowired private JwtTokenFilter jwtTokenFilter;
 
-  @Autowired
-  public WebSecurity(JwtTokenFilter jwtTokenFilter) {
-    this.jwtTokenFilter = jwtTokenFilter;
-  }
+  @Autowired private HistoryModeFilter historyModeFilter;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -45,11 +43,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         // TODO: Change after JWT and Vue router fix
-        .antMatchers("/user/signup/")
+        .antMatchers("/img/**", "/css/**", "/js/**", "/user/signup/", "/sign-up")
+        // .antMatchers("/**")
         .permitAll()
         .anyRequest()
         .authenticated()
         .and()
+        .addFilterAfter(historyModeFilter, FilterSecurityInterceptor.class)
         // Add JwtTokenFilter
         .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
   }
