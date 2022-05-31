@@ -1,4 +1,4 @@
-package de.javagath.backend.config;
+package de.javagath.backend.web.config;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;

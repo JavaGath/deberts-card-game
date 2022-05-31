@@ -1,4 +1,4 @@
-package de.javagath.backend.config;
+package de.javagath.backend.web.config;
 
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
