@@ -18,6 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * mode to connect to other addresses. Servers like Node.js supports as default history mode for
  * JS-Sources but tomcat does not. This filter implements this functionality for tomcat.
  *
+ * <p>javaApiPattern contains Java-Controllers for backend calls. These calls should not be
+ * forwarded
+ *
  * @author Ievgenii Izrailtenko
  * @version 1.0
  * @since 1.0
@@ -28,19 +31,20 @@ public class HistoryModeFilter extends OncePerRequestFilter {
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
   private final Pattern pattern = Pattern.compile("^/([^.])*");
+  private final Pattern javaApiPattern = Pattern.compile("^.*/user.*$");
 
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     LOG.debug(request.getRequestURI());
-    if (pattern.matcher(request.getRequestURI()).matches()) {
-      LOG.debug("URI is matched");
+    if (pattern.matcher(request.getRequestURI()).matches()
+        && !javaApiPattern.matcher(request.getRequestURI()).matches()) {
+      LOG.debug("Pattern is matched and javaApiPattern is not matched");
       String endpoint = "/";
       RequestDispatcher rd = request.getRequestDispatcher(endpoint);
       rd.forward(request, response);
     } else {
-      LOG.debug("URI is not matched");
       filterChain.doFilter(request, response);
     }
   }
