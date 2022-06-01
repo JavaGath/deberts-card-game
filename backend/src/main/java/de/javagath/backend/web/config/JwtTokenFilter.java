@@ -23,18 +23,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    LOG.info("Filter " + this.getClass().getName() + " is used");
+    LOG.debug("Filter " + this.getClass().getName() + " is used");
     String authHeader = request.getHeader("Authorization");
-    LOG.info("AuthHeader: " + authHeader);
-    // If I have no Authorization header, then skip this filter
+    LOG.debug("AuthHeader: " + authHeader);
     if (authHeader != null && !authHeader.isBlank()) {
-      String jwt = authHeader.substring(7);
-      LOG.info(jwt);
-      if (jwt.isBlank()) {
+      String[] authContent = authHeader.split(" ");
+      if (authContent.length != 2 || !authContent[0].equals("Bearer") || authContent[1].isBlank()) {
         response.sendError(
             HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT Token in Bearer Header");
       } else {
-
         UsernamePasswordAuthenticationToken authToken =
             new UsernamePasswordAuthenticationToken(
                 "ievgenii.izrailtenko@gmail.com", "123456", null);
