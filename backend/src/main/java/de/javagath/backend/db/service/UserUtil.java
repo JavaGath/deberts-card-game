@@ -4,6 +4,7 @@ import de.javagath.backend.db.model.UserEntity;
 import de.javagath.backend.web.model.SignUpDto;
 import java.lang.invoke.MethodHandles;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserRegistrar {
+public class UserUtil {
 
   static final String bcryptInfo = "$2a$10$";
   private static final String PEPPER = "G8pfjFp34fLBew1eg5k";
@@ -24,7 +25,7 @@ public class UserRegistrar {
   private SessionFactory hibernateFactory;
 
   @Autowired
-  public UserRegistrar(EntityManagerFactory factory) {
+  public UserUtil(EntityManagerFactory factory) {
     if (factory.unwrap(SessionFactory.class) == null) {
       throw new NullPointerException("factory is not a hibernate factory");
     }
@@ -39,6 +40,13 @@ public class UserRegistrar {
     LOG.info("Test Save Begin!");
     session.save(newUser);
     LOG.info("Test Save End!");
+  }
+
+  public UserEntity selectUserByEmail(String email) {
+    Session session = hibernateFactory.openSession();
+    Query query = session.createQuery("from UserEntity u where u.email = :email");
+    query.setParameter("email", email);
+    return (UserEntity) query.getSingleResult();
   }
 
   private String encodePassword(String password, String salt) {

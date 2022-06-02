@@ -1,7 +1,7 @@
 package de.javagath.backend.web;
 
 import de.javagath.backend.db.model.UserEntity;
-import de.javagath.backend.db.service.UserRegistrar;
+import de.javagath.backend.db.service.UserUtil;
 import de.javagath.backend.web.model.SignUpDto;
 import de.javagath.backend.web.service.JwtUtil;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class UserController {
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-  @Autowired UserRegistrar userRegistrar;
+  @Autowired UserUtil userUtil;
 
   @Autowired JwtUtil jwtUtil;
 
@@ -38,7 +38,7 @@ public class UserController {
       throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException,
           UnrecoverableKeyException {
     LOG.info(singUpDto.toString());
-    userRegistrar.registry(singUpDto);
+    userUtil.registry(singUpDto);
     UserEntity user = new UserEntity();
     // ToDo: get user after Registration
     user.setEmail(singUpDto.getEmail());

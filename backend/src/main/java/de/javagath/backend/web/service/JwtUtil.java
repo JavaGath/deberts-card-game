@@ -1,5 +1,6 @@
 package de.javagath.backend.web.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.javagath.backend.db.model.UserEntity;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +15,7 @@ import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +57,7 @@ public class JwtUtil {
         .compact();
   }
 
-  public String validateToken(String token)
+  public boolean validateToken(String token)
       throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException,
           UnrecoverableKeyException {
     // ToDo: Create own service
@@ -63,16 +65,25 @@ public class JwtUtil {
     KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
     keyStore.load(is, password.toCharArray());
     Key key = keyStore.getKey(alias, password.toCharArray());
-
     try {
-
       Jwts.parserBuilder().setSigningKey(key).build().parse(token);
-      System.out.println("WE CAN TRUST!!!!!!!");
-
+      return true;
     } catch (JwtException e) {
-      System.out.println("NOT OK!!!!!!!" + e.toString());
+      return false;
     }
+  }
 
-    return "test";
+  public Map<String, String> getBody(String token)
+      throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException,
+          CertificateException {
+    // ToDo: Create own service
+    FileInputStream is = new FileInputStream(path);
+    KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    keyStore.load(is, password.toCharArray());
+    Key key = keyStore.getKey(alias, password.toCharArray());
+    ObjectMapper mapper = new ObjectMapper();
+    Object json = Jwts.parserBuilder().setSigningKey(key).build().parse(token).getBody();
+    Map<String, String> map = mapper.convertValue(json, Map.class);
+    return map;
   }
 }
