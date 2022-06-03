@@ -8,23 +8,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Entity class for the table users.
+ *
+ * @author Ievgenii Izrailtenko
+ * @version 1.0
+ * @since 1.0
+ */
 @Entity
 @Table(name = "users")
 public class UserEntity {
-
-  /*
-    usr_id                SERIAL PRIMARY KEY
-   ,usr_name              VARCHAR(50) UNIQUE NOT NULL
-   ,usr_email             VARCHAR(50) UNIQUE NOT NULL
-   ,usr_salt              TEXT NOT NULL
-   ,usr_password          TEXT NOT NULL
-   ,usr_last_game_result  VARCHAR(4)
-   ,usr_total_wins        INT
-   ,usr_total_loses       INT
-   ,usr_win_rate          NUMERIC(5, 2)
-   ,usr_actual_win_streak INT
-   ,usr_best_win_streak   INT
-  */
 
   @Id
   @Column(name = "usr_id")
@@ -63,90 +56,200 @@ public class UserEntity {
   @Column(name = "usr_best_win_streak")
   private int bestWinSteak = 0;
 
+  /**
+   * Returns actual winner streak of the player.
+   *
+   * @return actual winner streak
+   */
   public int getActualWinStreak() {
     return actualWinStreak;
   }
 
+  /**
+   * Sets new winner streak for the user.
+   *
+   * @param actualWinStreak winner streak to set
+   */
   public void setActualWinStreak(int actualWinStreak) {
     this.actualWinStreak = actualWinStreak;
   }
 
+  /**
+   * Returns the best winner streak in users history.
+   *
+   * @return best winner streak
+   */
   public int getBestWinSteak() {
     return bestWinSteak;
   }
 
+  /**
+   * Sets new best winner streak for the user.
+   *
+   * @param bestWinSteak best winner streak to set
+   */
   public void setBestWinSteak(int bestWinSteak) {
     this.bestWinSteak = bestWinSteak;
   }
 
+  /**
+   * Returns user id.
+   *
+   * @return user id
+   */
   public Integer getId() {
     return id;
   }
 
+  /**
+   * Sets user id.
+   *
+   * @param id user id
+   */
   public void setId(Integer id) {
     this.id = id;
   }
 
+  /**
+   * Returns username.
+   *
+   * @return username
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Sets username.
+   *
+   * @param name username
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * Returns users email.
+   *
+   * @return users email
+   */
   public String getEmail() {
     return email;
   }
 
+  /**
+   * Sets users email.
+   *
+   * @param email users email
+   */
   public void setEmail(String email) {
     this.email = email;
   }
 
+  /**
+   * Returns users salt for password.
+   *
+   * @return users salt
+   */
   public String getSalt() {
     return salt;
   }
 
+  /**
+   * Sets users salt for password.
+   *
+   * @param salt users salt
+   */
   public void setSalt(String salt) {
     this.salt = salt;
   }
 
+  /**
+   * Returns users password.
+   *
+   * @return users password
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Sets users password.
+   *
+   * @param password users password
+   */
   public void setPassword(String password) {
     this.password = password;
   }
 
+  /**
+   * Returns the result of the last game.
+   *
+   * @return last result
+   */
   public String getLastGameResult() {
     return lastGameResult;
   }
 
+  /**
+   * Sets result for the last users game.
+   *
+   * @param lastGameResult result of the last game
+   */
   public void setLastGameResult(String lastGameResult) {
     this.lastGameResult = lastGameResult;
   }
 
+  /**
+   * Returns the total wins number of the user.
+   *
+   * @return total wins
+   */
   public int getTotalWins() {
     return totalWins;
   }
 
+  /**
+   * Sets new total wins number for the user.
+   *
+   * @param totalWins total wins
+   */
   public void setTotalWins(int totalWins) {
     this.totalWins = totalWins;
   }
 
+  /**
+   * Returns total number of loses.
+   *
+   * @return total loses
+   */
   public int getTotalLoses() {
     return totalLoses;
   }
 
+  /**
+   * Sets new total loses number for the user.
+   *
+   * @param totalLoses total loses
+   */
   public void setTotalLoses(int totalLoses) {
     this.totalLoses = totalLoses;
   }
 
+  /**
+   * Returns users win rate.
+   *
+   * @return win rate
+   */
   public long getWinRate() {
     return winRate;
   }
 
+  /**
+   * Sets new win rate of the user.
+   *
+   * @param winRate win rate
+   */
   public void setWinRate(long winRate) {
     this.winRate = winRate;
   }
