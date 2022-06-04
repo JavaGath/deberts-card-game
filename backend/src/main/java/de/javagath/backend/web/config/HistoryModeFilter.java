@@ -30,8 +30,9 @@ public class HistoryModeFilter extends OncePerRequestFilter {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+  private static final String ENDPOINT = "/";
   private final Pattern pattern = Pattern.compile("^/([^.])*");
-  private final Pattern javaApiPattern = Pattern.compile("^.*/user.*$");
+  private final Pattern javaApiPattern = Pattern.compile("^.*/api/.*$");
 
   @Override
   protected void doFilterInternal(
@@ -41,8 +42,7 @@ public class HistoryModeFilter extends OncePerRequestFilter {
     if (pattern.matcher(request.getRequestURI()).matches()
         && !javaApiPattern.matcher(request.getRequestURI()).matches()) {
       LOG.debug("Pattern is matched and javaApiPattern is not matched");
-      String endpoint = "/";
-      RequestDispatcher rd = request.getRequestDispatcher(endpoint);
+      RequestDispatcher rd = request.getRequestDispatcher(ENDPOINT);
       rd.forward(request, response);
     } else {
       filterChain.doFilter(request, response);

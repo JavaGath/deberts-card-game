@@ -56,7 +56,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()))
         .and()
         .authorizeRequests()
-        .antMatchers("/img/**", "/css/**", "/js/**", "/user/**", "/sign-up")
+        .antMatchers("/img/**", "/css/**", "/js/**", "/api/auth/**", "/sign-up")
         .permitAll()
         .anyRequest()
         .authenticated()

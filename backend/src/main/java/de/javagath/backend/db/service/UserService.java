@@ -1,6 +1,7 @@
 package de.javagath.backend.db.service;
 
 import de.javagath.backend.db.model.UserEntity;
+import de.javagath.backend.web.config.Constants;
 import de.javagath.backend.web.model.SignUpDto;
 import java.lang.invoke.MethodHandles;
 import javax.persistence.EntityManagerFactory;
@@ -26,7 +27,6 @@ public class UserService {
 
   private static final String BCRYPT_INFO = "$2a$10$";
   private static final String PEPPER = "G8pfjFp34fLBew1eg5k";
-  private static final String EMAIL_PARAMETER_KEY = "email";
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -68,7 +68,7 @@ public class UserService {
   public UserEntity selectUserByEmail(String email) {
     Session session = hibernateFactory.openSession();
     Query query = session.createQuery("from UserEntity u where u.email = :email");
-    query.setParameter(EMAIL_PARAMETER_KEY, email);
+    query.setParameter(Constants.EMAIL_PARAMETER_KEY, email);
     return (UserEntity) query.getSingleResult();
   }
 
