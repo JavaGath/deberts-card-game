@@ -7,8 +7,10 @@ import de.javagath.backend.game.model.enums.Suit;
 import de.javagath.backend.game.model.enums.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-unittest.properties")
 class TrumpTest {
 
   @Test
