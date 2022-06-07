@@ -56,6 +56,101 @@ public class UserEntity {
   @Column(name = "usr_best_win_streak")
   private int bestWinSteak = 0;
 
+  @Override
+  public int hashCode() {
+    int result = getId().hashCode();
+    result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+    result = 31 * result + getEmail().hashCode();
+    result = 31 * result + getSalt().hashCode();
+    result = 31 * result + getPassword().hashCode();
+    result = 31 * result + (getLastGameResult() != null ? getLastGameResult().hashCode() : 0);
+    result = 31 * result + getTotalWins();
+    result = 31 * result + getTotalLoses();
+    result = 31 * result + (int) (getWinRate() ^ (getWinRate() >>> 32));
+    result = 31 * result + getActualWinStreak();
+    result = 31 * result + getBestWinSteak();
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof UserEntity)) {
+      return false;
+    }
+
+    UserEntity entity = (UserEntity) o;
+
+    if (getTotalWins() != entity.getTotalWins()) {
+      return false;
+    }
+    if (getTotalLoses() != entity.getTotalLoses()) {
+      return false;
+    }
+    if (getWinRate() != entity.getWinRate()) {
+      return false;
+    }
+    if (getActualWinStreak() != entity.getActualWinStreak()) {
+      return false;
+    }
+    if (getBestWinSteak() != entity.getBestWinSteak()) {
+      return false;
+    }
+    if (!getId().equals(entity.getId())) {
+      return false;
+    }
+    if (getName() != null ? !getName().equals(entity.getName()) : entity.getName() != null) {
+      return false;
+    }
+    if (!getEmail().equals(entity.getEmail())) {
+      return false;
+    }
+    if (!getSalt().equals(entity.getSalt())) {
+      return false;
+    }
+    if (!getPassword().equals(entity.getPassword())) {
+      return false;
+    }
+    return getLastGameResult() != null
+        ? getLastGameResult().equals(entity.getLastGameResult())
+        : entity.getLastGameResult() == null;
+  }
+
+  @Override
+  public String toString() {
+    return "UserEntity{"
+        + "id="
+        + id
+        + ", name='"
+        + name
+        + '\''
+        + ", email='"
+        + email
+        + '\''
+        + ", salt='"
+        + salt
+        + '\''
+        + ", password='"
+        + password
+        + '\''
+        + ", lastGameResult='"
+        + lastGameResult
+        + '\''
+        + ", totalWins="
+        + totalWins
+        + ", totalLoses="
+        + totalLoses
+        + ", winRate="
+        + winRate
+        + ", actualWinStreak="
+        + actualWinStreak
+        + ", bestWinSteak="
+        + bestWinSteak
+        + '}';
+  }
+
   /**
    * Returns actual winner streak of the player.
    *
