@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE IF NOT EXISTS users
 (
     usr_id                SERIAL PRIMARY KEY,

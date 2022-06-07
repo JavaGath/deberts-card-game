@@ -56,6 +56,7 @@ public class UserService {
     Session session = hibernateFactory.openSession();
     LOG.debug("Try to save user");
     session.save(newUser);
+    session.close();
     LOG.debug("User is saved");
   }
 
