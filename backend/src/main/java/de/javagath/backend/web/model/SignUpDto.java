@@ -1,30 +1,67 @@
 package de.javagath.backend.web.model;
 
+/**
+ * DTO class user registration.
+ *
+ * @author Ievgenii Izrailtenko
+ * @version 1.0
+ * @since 1.0
+ */
 public class SignUpDto {
   private String username;
   private String email;
   private String password;
 
+  /**
+   * Returns username from the registration data.
+   *
+   * @return username
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Sets new username to the registration data.
+   *
+   * @param name new username
+   */
   public void setUsername(String name) {
     this.username = name;
   }
 
+  /**
+   * Returns email from the registration data.
+   *
+   * @return email
+   */
   public String getEmail() {
     return email;
   }
 
+  /**
+   * Sets email to the registration data.
+   *
+   * @param email new email
+   */
   public void setEmail(String email) {
     this.email = email;
   }
 
+  /**
+   * Returns user password in plain text from the registration data.
+   *
+   * @return users password
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Sets new password in plain text to the registration data.
+   *
+   * @param password users password
+   */
   public void setPassword(String password) {
     this.password = password;
   }

@@ -1,10 +1,13 @@
 package de.javagath.backend.db.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
 import de.javagath.backend.db.model.UserEntity;
+import de.javagath.backend.web.model.SignUpDto;
 import java.lang.invoke.MethodHandles;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +28,7 @@ public class UserServiceTest {
   @Autowired private UserService userService;
 
   @Test
-  void selectUserByEmail_selectExistedUser_selectExpectedUserEntity() {
+  void selectUserByEmail_selectExistedUser_selectsExpectedUserEntity() {
     UserEntity expectedUserEntity = new UserEntity();
     expectedUserEntity.setId(1);
     expectedUserEntity.setName("Plitochnik");
@@ -57,5 +60,34 @@ public class UserServiceTest {
     assertThat(expectedUserEntity.getBestWinSteak()).isEqualTo(selectedEntity.getBestWinSteak());
     assertThat(expectedUserEntity).isEqualTo(selectedEntity);
     assertThat(expectedUserEntity.hashCode()).isEqualTo(selectedEntity.hashCode());
+  }
+
+  @Test
+  void
+      registry_registryNewUserAndSelectExistedUser_selectsExpectedUserEntityWithEmailAndUsername() {
+    SignUpDto dto = new SignUpDto();
+    dto.setUsername("javagath");
+    dto.setEmail("javagath@gmail.com");
+    dto.setPassword("javagath123");
+    LOG.info(dto.toString());
+
+    userService.registry(dto);
+    UserEntity selectedEntity = userService.selectUserByEmail(dto.getEmail());
+    assertThat(dto.getEmail()).isEqualTo(selectedEntity.getEmail());
+    assertThat(dto.getUsername()).isEqualTo(selectedEntity.getName());
+  }
+
+  @Test
+  void registry_registryTwoEqualUsers_throwsException() {
+    SignUpDto dto = new SignUpDto();
+    dto.setUsername("javagath");
+    dto.setEmail("javagath@gmail.com");
+    dto.setPassword("javagath123");
+    LOG.info(dto.toString());
+
+    userService.registry(dto);
+
+    assertThatThrownBy(() -> userService.registry(dto))
+        .isInstanceOf(ConstraintViolationException.class);
   }
 }
