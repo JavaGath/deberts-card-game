@@ -33,7 +33,7 @@ public class AuthenticationControllerTest {
 
   @Test
   void signUp_newUniqueUser_http200() throws JSONException, URISyntaxException {
-    final String baseUrl = "http://localhost:" + port + "/api/auth/signup";
+    String baseUrl = "http://localhost:" + port + "/api/auth/signup";
     JSONObject json = new JSONObject();
     json.put("username", "JavaGath123");
     json.put("email", "javagath@test.com");

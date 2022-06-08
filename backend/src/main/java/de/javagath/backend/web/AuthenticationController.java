@@ -2,6 +2,7 @@ package de.javagath.backend.web;
 
 import de.javagath.backend.db.model.UserEntity;
 import de.javagath.backend.db.service.UserService;
+import de.javagath.backend.web.config.Constants;
 import de.javagath.backend.web.model.SignUpDto;
 import de.javagath.backend.web.service.JwtService;
 import java.lang.invoke.MethodHandles;
@@ -59,7 +60,7 @@ public class AuthenticationController {
     LOG.debug(singUpDto.toString());
     userService.registry(singUpDto);
     UserEntity user = userService.selectUserByEmail(singUpDto.getEmail());
-    String token = jwtService.generateToken(user);
+    String token = Constants.BEARER + " " + jwtService.generateToken(user);
     return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(user);
   }
 }
