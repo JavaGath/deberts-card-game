@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,7 +54,7 @@ public class AuthenticationController {
    * @param singUpDto information for registration
    * @return new user
    */
-  @PostMapping(value = "/signup", consumes = "application/json")
+  @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserEntity> signUp(@RequestBody SignUpDto singUpDto) {
     LOG.debug(singUpDto.toString());
     userService.registry(singUpDto);
