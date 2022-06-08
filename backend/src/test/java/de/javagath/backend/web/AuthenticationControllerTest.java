@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
+import de.javagath.backend.web.config.Constants;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.json.JSONException;
@@ -39,8 +40,8 @@ public class AuthenticationControllerTest {
     json.put("email", "javagath@test.com");
     json.put("password", "crackMe");
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-    headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+    headers.set(Constants.CONTENT_TYPE_HEADER, MediaType.APPLICATION_JSON_VALUE);
+    headers.set(Constants.ACCEPT_HEADER, MediaType.APPLICATION_JSON_VALUE);
 
     HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
     URI uri = new URI(baseUrl);
