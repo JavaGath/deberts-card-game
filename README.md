@@ -96,8 +96,8 @@ After that we have to generate a certificate for the public key
 11. ~~MVN-Infrastructure Frontend~~
 12. Security
     1. ~~Store password in DB~~
-    2. Create JWT
-    3. Use JWT for Authentication (via filter)
+    2. ~~Create JWT~~
+    3. ~~Use JWT for Authentication (via filter)~~
     4. Use Backend generated JWT in Vue
 13. DB-Schema
 14. Save/Load
@@ -105,4 +105,24 @@ After that we have to generate a certificate for the public key
     1. Vue Part
     2. Rest Controller
 
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=javagath)](https://github.com/anuraghazra/github-readme-stats)
+### Useful topics:
+
+- Testing
+    - Test ---> CardTest.java
+    - ParameterizedTest CSV ---> CardTest.java
+    - ParameterizedTest EnumSource ---> CardTest.java
+    - ControllerTest Get ---> DefaultControllerTest.java
+    - ControllerTest Get with Headers ---> DefaultControllerTest.java
+    - ControllerTest Post ---> AuthenticationControllerTest.java
+    - Test Postgres via H2 ---> UserServiceTest.java + application-unittest.properties
+- Security
+    - JWT Creation, Validation etc ---> JwtService.java
+    - JWT Security Config (whitelisting, stateless, without basic auth) ---> WebSecurity.java
+    - JWT Authentication ---> JwtTokenFilter.java
+    - HistoryMode for embedded tomcat ---> HistoryModeFilter.java
+    - Store Passwords in DB using BCrypt, Salt and Pepper ---> UserService,java
+- General
+    - MVN + Vue ---> pom.xml
+    - State Pattern ---> Phase.java, Action.java, Combo.java, Trade.java
+
+      [![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=javagath)](https://github.com/anuraghazra/github-readme-stats)
