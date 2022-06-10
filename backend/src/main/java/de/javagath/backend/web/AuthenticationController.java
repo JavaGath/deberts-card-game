@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 public class AuthenticationController {
 
   private static final Logger LOG =
