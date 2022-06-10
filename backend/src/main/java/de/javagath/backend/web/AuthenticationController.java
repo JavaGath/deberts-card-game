@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @since 1.0
  */
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 public class AuthenticationController {
 
   private static final Logger LOG =
@@ -61,6 +60,9 @@ public class AuthenticationController {
     userService.registry(singUpDto);
     UserEntity user = userService.selectUserByEmail(singUpDto.getEmail());
     String token = Constants.BEARER + " " + jwtService.generateToken(user);
-    return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(user);
+    ResponseEntity<UserEntity> result =
+        ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(user);
+    LOG.info("New player tries to sign up. Response status: " + result.getStatusCode());
+    return result;
   }
 }

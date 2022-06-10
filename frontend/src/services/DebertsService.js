@@ -10,6 +10,6 @@ const apiClient = axios.create({
 
 export default {
   signUp(body) {
-    return apiClient.post('http://localhost:8080/user/signup', body)
+    return apiClient.post('api/auth/signup', body)
   }
 }
