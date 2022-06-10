@@ -34,11 +34,6 @@
 
   <dependencies>
     <dependency>
-      <artifactId>spring-boot-starter</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-
-    <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
