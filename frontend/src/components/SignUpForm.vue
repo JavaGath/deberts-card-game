@@ -114,16 +114,10 @@ export default {
       this.checkPassword()
       this.checkEmail()
       if (this.error.counter === 0) {
-        /* eslint-disable no-console */
-        console.log('registrationData is:', this.registrationData)
-        /* eslint-enable no-console */
-
-        this.$store.dispatch('signup', this.registrationData)
-        /*if (response.status === 200) {
+        this.$store.dispatch('signup', this.registrationData).then(() => {
           this.error.username = ''
-        } else {
-          this.error.username = ''
-        }*/
+          this.$router.push({ name: 'home' })
+        })
       }
     }
   }
