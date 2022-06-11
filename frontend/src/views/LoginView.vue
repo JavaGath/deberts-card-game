@@ -5,13 +5,12 @@
       :right-menu="rightMenuTop"
       :html-type="'header'"
     ></NavBar>
+    <LoginForm class="form-center"></LoginForm>
     <NavBar
       class="bot"
       :right-menu="rightMenuBot"
       :html-type="'footer'"
     ></NavBar>
-    <h1>Sign in to deberts</h1>
-    <LoginForm msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 

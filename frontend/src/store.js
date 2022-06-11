@@ -21,6 +21,11 @@ export default createStore({
       return DebertsService.signUp(credentials).then(({ data }) => {
         commit('SET_USER_DATA', data)
       })
+    },
+    login({ commit }, credentials) {
+      return DebertsService.login(credentials).then(({ data }) => {
+        commit('SET_USER_DATA', data)
+      })
     }
   },
   modules: {}
