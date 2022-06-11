@@ -4,6 +4,7 @@ import de.javagath.backend.db.model.UserEntity;
 import de.javagath.backend.db.service.UserService;
 import de.javagath.backend.web.config.Constants;
 import de.javagath.backend.web.model.SignUpDto;
+import de.javagath.backend.web.model.UserDto;
 import de.javagath.backend.web.service.JwtService;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
@@ -55,13 +56,16 @@ public class AuthenticationController {
    * @return new user
    */
   @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UserEntity> signUp(@RequestBody SignUpDto singUpDto) {
+  public ResponseEntity<UserDto> signUp(@RequestBody SignUpDto singUpDto) {
     LOG.debug(singUpDto.toString());
     userService.registry(singUpDto);
-    UserEntity user = userService.selectUserByEmail(singUpDto.getEmail());
-    String token = Constants.BEARER + " " + jwtService.generateToken(user);
-    ResponseEntity<UserEntity> result =
-        ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(user);
+    UserEntity userEntity = userService.selectUserByEmail(singUpDto.getEmail());
+    String token = jwtService.generateToken(userEntity);
+    UserDto user = new UserDto(userEntity, token);
+    ResponseEntity<UserDto> result =
+        ResponseEntity.ok()
+            .header(HttpHeaders.AUTHORIZATION, Constants.BEARER + " " + token)
+            .body(user);
     LOG.info("New player tries to sign up. Response status: " + result.getStatusCode());
     return result;
   }
