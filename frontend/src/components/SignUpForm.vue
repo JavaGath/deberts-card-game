@@ -41,7 +41,6 @@
 
 <script>
 import BaseInput from '@/components/BaseInput'
-import DebertsService from '@/services/DebertsService'
 
 export default {
   name: 'RegistryForm',
@@ -115,13 +114,16 @@ export default {
       this.checkPassword()
       this.checkEmail()
       if (this.error.counter === 0) {
-        DebertsService.signUp(this.registrationData).then((response) => {
-          if (response.status === 200) {
-            this.error.username = ''
-          } else {
-            this.error.username = ''
-          }
-        })
+        /* eslint-disable no-console */
+        console.log('registrationData is:', this.registrationData)
+        /* eslint-enable no-console */
+
+        this.$store.dispatch('signup', this.registrationData)
+        /*if (response.status === 200) {
+          this.error.username = ''
+        } else {
+          this.error.username = ''
+        }*/
       }
     }
   }
