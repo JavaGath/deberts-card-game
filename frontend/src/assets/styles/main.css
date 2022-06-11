@@ -28,6 +28,10 @@ form {
     height: calc(100vh - 100px);
 }
 
+input {
+    width: 215px;
+}
+
 .bar {
     background-color: #4f1d01;
     overflow: hidden;
