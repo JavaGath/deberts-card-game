@@ -43,7 +43,7 @@ public class DefaultControllerTest {
     URI uri = new URI(baseUrl);
     ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
 
-    assertThat(HttpStatus.UNAUTHORIZED).isEqualTo(response.getStatusCode());
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
   }
 
   @Test
@@ -60,7 +60,7 @@ public class DefaultControllerTest {
     ResponseEntity<String> response =
         restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
-    assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class DefaultControllerTest {
     ResponseEntity<String> response =
         restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
-    assertThat(HttpStatus.INTERNAL_SERVER_ERROR).isEqualTo(response.getStatusCode());
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @Test
@@ -95,6 +95,6 @@ public class DefaultControllerTest {
     ResponseEntity<String> response =
         restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
-    assertThat(HttpStatus.UNAUTHORIZED).isEqualTo(response.getStatusCode());
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
   }
 }
