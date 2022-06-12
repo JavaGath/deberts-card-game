@@ -1,7 +1,7 @@
 package de.javagath.backend.web.model;
 
 /**
- * DTO class user registration.
+ * DTO class for user registration.
  *
  * @author Ievgenii Izrailtenko
  * @version 1.0
