@@ -51,7 +51,7 @@ public class DefaultControllerTest {
     String baseUrl = "http://localhost:" + port + "/";
     String email = "Plitochnik@gmail.com";
 
-    UserEntity selectedEntity = userService.selectUserByEmail(email);
+    UserEntity selectedEntity = userService.selectUserByLogin(email);
     String tokenInHeader = Constants.BEARER + " " + jwtService.generateToken(selectedEntity);
     HttpHeaders headers = new HttpHeaders();
     headers.set(Constants.AUTH_HEADER, tokenInHeader);
@@ -68,7 +68,7 @@ public class DefaultControllerTest {
     String baseUrl = "http://localhost:" + port + "/";
     String email = "Plitochnik@gmail.com";
 
-    UserEntity selectedEntity = userService.selectUserByEmail(email);
+    UserEntity selectedEntity = userService.selectUserByLogin(email);
     String tokenInHeader =
         Constants.BEARER + " " + jwtService.generateToken(selectedEntity).substring(5);
     HttpHeaders headers = new HttpHeaders();
@@ -86,7 +86,7 @@ public class DefaultControllerTest {
     String baseUrl = "http://localhost:" + port + "/";
     String email = "Plitochnik@gmail.com";
 
-    UserEntity selectedEntity = userService.selectUserByEmail(email);
+    UserEntity selectedEntity = userService.selectUserByLogin(email);
     String tokenInHeader = jwtService.generateToken(selectedEntity);
     HttpHeaders headers = new HttpHeaders();
     headers.set(Constants.AUTH_HEADER, tokenInHeader);

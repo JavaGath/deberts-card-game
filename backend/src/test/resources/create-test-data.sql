@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS users
 INSERT INTO users(usr_id, usr_name, usr_email, usr_salt, usr_password, usr_last_game_result,
                   usr_total_wins, usr_total_loses, usr_win_rate, usr_actual_win_streak,
                   usr_best_win_streak)
-VALUES ('1', 'Plitochnik', 'Plitochnik@gmail.com', 'LExkyZ/GnDOAnntwOfrkwO',
-        'Q2ti1YG5isZh9aN8csiy..KpCqt3v6Vbr3HDQ3Chojc1IdqdhNAgm', null, 0, 0, 0.00, 0, 0);
+VALUES ('1', 'Plitochnik', 'Plitochnik@gmail.com', 'rM.dLeHK5ZtDUKKvgMVkpe',
+        'l7mRPUqEGP/FJLhL.ricr3iwzaYqbTm', null, 0, 0, 0.00, 0, 0);

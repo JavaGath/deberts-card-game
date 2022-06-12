@@ -33,8 +33,8 @@ public class UserServiceTest {
     expectedUserEntity.setId(1);
     expectedUserEntity.setName("Plitochnik");
     expectedUserEntity.setEmail("Plitochnik@gmail.com");
-    expectedUserEntity.setSalt("LExkyZ/GnDOAnntwOfrkwO");
-    expectedUserEntity.setPassword("Q2ti1YG5isZh9aN8csiy..KpCqt3v6Vbr3HDQ3Chojc1IdqdhNAgm");
+    expectedUserEntity.setSalt("rM.dLeHK5ZtDUKKvgMVkpe");
+    expectedUserEntity.setPassword("l7mRPUqEGP/FJLhL.ricr3iwzaYqbTm");
     expectedUserEntity.setLastGameResult(null);
     expectedUserEntity.setTotalWins(0);
     expectedUserEntity.setTotalLoses(0);
@@ -42,7 +42,7 @@ public class UserServiceTest {
     expectedUserEntity.setActualWinStreak(0);
     expectedUserEntity.setBestWinSteak(0);
 
-    UserEntity selectedEntity = userService.selectUserByEmail(expectedUserEntity.getEmail());
+    UserEntity selectedEntity = userService.selectUserByLogin(expectedUserEntity.getEmail());
     LOG.info(selectedEntity.toString());
 
     assertThat(expectedUserEntity.getId()).isEqualTo(selectedEntity.getId());
@@ -72,7 +72,7 @@ public class UserServiceTest {
     LOG.info(dto.toString());
 
     userService.registry(dto);
-    UserEntity selectedEntity = userService.selectUserByEmail(dto.getEmail());
+    UserEntity selectedEntity = userService.selectUserByLogin(dto.getEmail());
     assertThat(dto.getEmail()).isEqualTo(selectedEntity.getEmail());
     assertThat(dto.getUsername()).isEqualTo(selectedEntity.getName());
   }

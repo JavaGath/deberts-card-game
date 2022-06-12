@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     checkLogin() {
-      const regex = /^[a-zA-Z\d._-]+@[a-zA-Z\d.-]+.[a-zA-Z]{2,4}$/
       if (
         this.registrationData.login.length < 6 ||
         this.registrationData.login.length > 51
@@ -60,14 +59,6 @@ export default {
         return
       } else {
         this.error.login = ''
-        this.error.counter = 0
-      }
-
-      if (!this.registrationData.email.match(regex)) {
-        this.error.email = 'Please enter your mail in the correct format.'
-        this.error.counter++
-      } else {
-        this.error.email = ''
         this.error.counter = 0
       }
     },

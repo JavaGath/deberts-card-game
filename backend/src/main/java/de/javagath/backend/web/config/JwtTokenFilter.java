@@ -65,10 +65,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   private void handleAuthentication(String token) {
     Map<String, String> claims = jwtService.getBody(token);
     LOG.debug("My claims: " + claims);
-    UserEntity user = userService.selectUserByEmail(claims.get(Constants.EMAIL_PARAMETER_KEY));
-    UsernamePasswordAuthenticationToken authToken =
-        new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), null);
-    SecurityContextHolder.getContext().setAuthentication(authToken);
+    if (SecurityContextHolder.getContext().getAuthentication() == null) {
+      UserEntity userEntity =
+          userService.selectUserByLogin(claims.get(Constants.EMAIL_PARAMETER_KEY));
+      UsernamePasswordAuthenticationToken authToken =
+          userService.createUserPasswordAuthenticationToken(
+              userEntity.getEmail(), userEntity.getPassword());
+      SecurityContextHolder.getContext().setAuthentication(authToken);
+    }
   }
 
   private boolean isAuthHeaderReady(String authHeader) {

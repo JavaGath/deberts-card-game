@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <NavBar
+      v-if="test2()"
       class="top"
       :right-menu="rightMenuTop"
       :html-type="'header'"
@@ -16,12 +17,14 @@
 <script>
 import NavBar from '@/components/NavBar'
 import '@/assets/styles/main.css'
+import { authComputed } from '@/vuex/helpers'
 
 export default {
   name: 'HomeView',
   components: {
     NavBar
   },
+
   data: function () {
     return {
       rightMenuTop: [
@@ -29,6 +32,14 @@ export default {
         { name: 'signUp', text: 'Sign Up', router: true }
       ],
       rightMenuBot: [{ name: '', text: 'Menu', router: false }]
+    }
+  },
+  computed: {
+    ...authComputed
+  },
+  methods: {
+    test2() {
+      return this.$store.getters['loggedIn']
     }
   }
 }

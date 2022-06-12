@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,23 +31,42 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(scripts = "/cleanup-test-data.sql", executionPhase = AFTER_TEST_METHOD)
 public class AuthenticationControllerTest {
   @LocalServerPort int port;
+  private String baseUrl;
+  private JSONObject json;
+  private HttpHeaders headers;
   @Autowired private TestRestTemplate restTemplate;
+
+  @BeforeEach
+  public void init() {
+    baseUrl = "http://localhost:" + port + "/api/auth";
+    json = new JSONObject();
+    headers = new HttpHeaders();
+    headers.set(Constants.CONTENT_TYPE_HEADER, MediaType.APPLICATION_JSON_VALUE);
+    headers.set(Constants.ACCEPT_HEADER, MediaType.APPLICATION_JSON_VALUE);
+  }
 
   @Test
   void signUp_newUniqueUser_http200() throws JSONException, URISyntaxException {
-    String baseUrl = "http://localhost:" + port + "/api/auth/signup";
-    JSONObject json = new JSONObject();
     json.put("username", "JavaGath123");
     json.put("email", "javagath@test.com");
     json.put("password", "crackMe");
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(Constants.CONTENT_TYPE_HEADER, MediaType.APPLICATION_JSON_VALUE);
-    headers.set(Constants.ACCEPT_HEADER, MediaType.APPLICATION_JSON_VALUE);
 
     HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
-    URI uri = new URI(baseUrl);
+    URI uri = new URI(baseUrl + "/signup");
     ResponseEntity<String> response = restTemplate.postForEntity(uri, request, String.class);
 
-    assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void login_existedUserRightPassword_http200() throws JSONException, URISyntaxException {
+    json.put("login", "Plitochnik");
+    json.put("password", "123456");
+
+    HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
+    URI uri = new URI(baseUrl + "/login");
+    ResponseEntity<String> response = restTemplate.postForEntity(uri, request, String.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 }

@@ -6,7 +6,11 @@ export default createStore({
   state: {
     user: null
   },
-  getters: {},
+  getters: {
+    loggedIn(state) {
+      return !!state.user
+    }
+  },
   mutations: {
     SET_USER_DATA(state, userData) {
       this.state.user = userData
