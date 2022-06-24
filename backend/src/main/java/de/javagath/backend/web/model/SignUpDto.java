@@ -11,6 +11,77 @@ public class SignUpDto {
   private String username;
   private String email;
   private String password;
+  private String errorMsg;
+
+  @Override
+  public int hashCode() {
+    int result = getUsername().hashCode();
+    result = 31 * result + getEmail().hashCode();
+    result = 31 * result + getPassword().hashCode();
+    result = 31 * result + (getErrorMsg() != null ? getErrorMsg().hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof SignUpDto)) {
+      return false;
+    }
+
+    SignUpDto signUpDto = (SignUpDto) o;
+
+    if (!getUsername().equals(signUpDto.getUsername())) {
+      return false;
+    }
+    if (!getEmail().equals(signUpDto.getEmail())) {
+      return false;
+    }
+    if (!getPassword().equals(signUpDto.getPassword())) {
+      return false;
+    }
+    return getErrorMsg() != null
+        ? getErrorMsg().equals(signUpDto.getErrorMsg())
+        : signUpDto.getErrorMsg() == null;
+  }
+
+  @Override
+  public String toString() {
+    return "SignUpDto{"
+        + "username='"
+        + username
+        + '\''
+        + ", email='"
+        + email
+        + '\''
+        + ", password='"
+        + password
+        + '\''
+        + ", errorMsg='"
+        + errorMsg
+        + '\''
+        + '}';
+  }
+
+  /**
+   * Returns error message from the registration process.
+   *
+   * @return error massage
+   */
+  public String getErrorMsg() {
+    return errorMsg;
+  }
+
+  /**
+   * Sets error message from the registration process.
+   *
+   * @param errorMsg error massage
+   */
+  public void setErrorMsg(String errorMsg) {
+    this.errorMsg = errorMsg;
+  }
 
   /**
    * Returns username from the registration data.
@@ -64,48 +135,5 @@ public class SignUpDto {
    */
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = getUsername().hashCode();
-    result = 31 * result + getEmail().hashCode();
-    result = 31 * result + getPassword().hashCode();
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof SignUpDto)) {
-      return false;
-    }
-
-    SignUpDto signUpDto = (SignUpDto) o;
-
-    if (!getUsername().equals(signUpDto.getUsername())) {
-      return false;
-    }
-    if (!getEmail().equals(signUpDto.getEmail())) {
-      return false;
-    }
-    return getPassword().equals(signUpDto.getPassword());
-  }
-
-  @Override
-  public String toString() {
-    return "SignUpDto{"
-        + "username='"
-        + username
-        + '\''
-        + ", email='"
-        + email
-        + '\''
-        + ", password='"
-        + password
-        + '\''
-        + '}';
   }
 }

@@ -11,6 +11,25 @@ public class LoginDto {
 
   private String login;
   private String password;
+  private String errorMsg;
+
+  /**
+   * Returns error message from the login process.
+   *
+   * @return error massage
+   */
+  public String getErrorMsg() {
+    return errorMsg;
+  }
+
+  /**
+   * Sets error message from the login process.
+   *
+   * @param errorMsg error massage
+   */
+  public void setErrorMsg(String errorMsg) {
+    this.errorMsg = errorMsg;
+  }
 
   /**
    * Returns user login data (username or email).
@@ -52,6 +71,7 @@ public class LoginDto {
   public int hashCode() {
     int result = getLogin().hashCode();
     result = 31 * result + getPassword().hashCode();
+    result = 31 * result + (getErrorMsg() != null ? getErrorMsg().hashCode() : 0);
     return result;
   }
 
@@ -69,11 +89,26 @@ public class LoginDto {
     if (!getLogin().equals(loginDto.getLogin())) {
       return false;
     }
-    return getPassword().equals(loginDto.getPassword());
+    if (!getPassword().equals(loginDto.getPassword())) {
+      return false;
+    }
+    return getErrorMsg() != null
+        ? getErrorMsg().equals(loginDto.getErrorMsg())
+        : loginDto.getErrorMsg() == null;
   }
 
   @Override
   public String toString() {
-    return "LoginDto{" + "login='" + login + '\'' + ", password='" + password + '\'' + '}';
+    return "LoginDto{"
+        + "login='"
+        + login
+        + '\''
+        + ", password='"
+        + password
+        + '\''
+        + ", errorMsg='"
+        + errorMsg
+        + '\''
+        + '}';
   }
 }
