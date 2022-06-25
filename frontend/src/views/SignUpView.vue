@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      rightMenuTop: [{ name: 'login', text: 'Sign In', router: true }],
+      rightMenuTop: [{ name: 'login', text: 'Sign In', buttonType: 'route' }],
       rightMenuBot: []
     }
   }

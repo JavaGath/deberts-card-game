@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <NavBar
-      v-if="test2()"
+      v-if="isLoggedIn()"
       class="top"
-      :right-menu="rightMenuTop"
+      :right-menu="rightMenuTopLoggedIn"
       :html-type="'header'"
     ></NavBar>
     <NavBar
@@ -27,19 +27,22 @@ export default {
 
   data: function () {
     return {
-      rightMenuTop: [
-        { name: 'login', text: 'Sign In', router: true },
-        { name: 'signUp', text: 'Sign Up', router: true }
+      rightMenuTopLoggedIn: [
+        { name: 'logout', text: 'Logout', buttonType: 'active' },
+        { name: '', text: this.getUsername(), buttonType: 'label' }
       ],
-      rightMenuBot: [{ name: '', text: 'Menu', router: false }]
+      rightMenuBot: [{ name: '', text: 'Menu', buttonType: 'active' }]
     }
   },
   computed: {
     ...authComputed
   },
   methods: {
-    test2() {
+    isLoggedIn() {
       return this.$store.getters['loggedIn']
+    },
+    getUsername() {
+      return this.$store.getters['username']
     }
   }
 }

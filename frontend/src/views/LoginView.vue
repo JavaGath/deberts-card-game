@@ -26,7 +26,7 @@ export default {
   },
   data: function () {
     return {
-      rightMenuTop: [{ name: 'signUp', text: 'Sign Up', router: true }],
+      rightMenuTop: [{ name: 'signUp', text: 'Sign Up', buttonType: 'route' }],
       rightMenuBot: []
     }
   }

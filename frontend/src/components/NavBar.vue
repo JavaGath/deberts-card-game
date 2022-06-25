@@ -1,12 +1,17 @@
 <template>
   <component :is="htmlType" class="bar" :class="htmlType">
     <div v-for="(button, index) in rightMenu" :key="index">
-      <div v-if="button.router === true">
-        <router-link class="menu" :to="{ name: button.name }">{{
+      <div v-if="button.buttonType === 'route'">
+        <router-link class="menu-route" :to="{ name: button.name }">{{
           button.text
         }}</router-link>
       </div>
-      <div v-else>
+      <div v-if="button.buttonType === 'active'">
+        <a class="menu-route" @click="callMethod(button.name)">{{
+          button.text
+        }}</a>
+      </div>
+      <div v-if="button.buttonType === 'label'">
         <a class="menu">{{ button.text }}</a>
       </div>
     </div>
@@ -25,6 +30,14 @@ export default {
     htmlType: {
       type: String,
       required: true
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+    },
+    callMethod(method) {
+      this[method]()
     }
   }
 }

@@ -55,9 +55,8 @@ input {
     margin-top:auto;
 }
 
-.bar a.menu {
+.bar a.menu, .bar a.menu-route {
     float: right;
-    background-color: #036140;
     color: #f2f2f2;
     text-align: center;
     padding: 14px 16px;
@@ -65,10 +64,26 @@ input {
     text-decoration: none;
     font-size: 17px;
     border-left: 2px solid white;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none /* Non-prefixed version, currently
+                      supported by Chrome, Edge, Opera and Firefox */
+}
+
+.bar a.menu-route {
+    background-color: #036140;
     cursor: pointer;
 }
 
-.bar a.menu:hover {
+.bar a.menu {
+    background-color: #003093;
+    cursor: default;
+}
+
+.bar a.menu-route:hover {
     background-color: #ddd;
     color: black;
 }
