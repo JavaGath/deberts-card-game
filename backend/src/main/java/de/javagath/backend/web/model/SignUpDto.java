@@ -7,7 +7,7 @@ package de.javagath.backend.web.model;
  * @version 1.0
  * @since 1.0
  */
-public class SignUpDto {
+public class SignUpDto implements Response {
   private String username;
   private String email;
   private String password;
@@ -65,20 +65,10 @@ public class SignUpDto {
         + '}';
   }
 
-  /**
-   * Returns error message from the registration process.
-   *
-   * @return error massage
-   */
   public String getErrorMsg() {
     return errorMsg;
   }
 
-  /**
-   * Sets error message from the registration process.
-   *
-   * @param errorMsg error massage
-   */
   public void setErrorMsg(String errorMsg) {
     this.errorMsg = errorMsg;
   }

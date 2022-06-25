@@ -78,7 +78,9 @@ public class UserService implements UserDetailsService {
     Session session = hibernateFactory.openSession();
     Query query = session.createQuery("from UserEntity u where u.email = :email");
     query.setParameter(Constants.EMAIL_PARAMETER_KEY, email);
-    return (UserEntity) query.getSingleResult();
+    UserEntity result = (UserEntity) query.getSingleResult();
+    session.close();
+    return result;
   }
 
   /**
@@ -91,7 +93,9 @@ public class UserService implements UserDetailsService {
     Session session = hibernateFactory.openSession();
     Query query = session.createQuery("from UserEntity u where u.name = :username");
     query.setParameter(Constants.USERNAME_PARAMETER_KEY, username);
-    return (UserEntity) query.getSingleResult();
+    UserEntity result = (UserEntity) query.getSingleResult();
+    session.close();
+    return result;
   }
 
   /**
@@ -113,7 +117,7 @@ public class UserService implements UserDetailsService {
     LOG.debug("Plain Password: " + password);
     int passwordValue = password.hashCode() + PEPPER.hashCode();
     String passwordBcryptHashed = BCrypt.hashpw(Integer.toString(passwordValue), salt);
-    LOG.info("Full Password: " + passwordBcryptHashed);
+    LOG.debug("Full Password: " + passwordBcryptHashed);
     String passwordReady = passwordBcryptHashed.substring(salt.length());
     LOG.debug("Password to Store: " + passwordReady);
     return passwordReady;
@@ -124,7 +128,7 @@ public class UserService implements UserDetailsService {
     newUser.setName(signUpDto.getUsername());
     newUser.setEmail(signUpDto.getEmail());
     String salt = BCrypt.gensalt();
-    LOG.info("My Salt Is: " + salt);
+    LOG.debug("My Salt Is: " + salt);
     newUser.setSalt(salt.substring(BCRYPT_INFO.length()));
     String passwordFinal = encodePasswordUsingSalt(signUpDto.getPassword(), salt);
 

@@ -10,7 +10,7 @@ import de.javagath.backend.db.model.UserEntity;
  * @version 1.0
  * @since 1.0
  */
-public class UserDto {
+public class UserDto implements Response {
 
   private final String name;
   private final String email;
@@ -21,6 +21,8 @@ public class UserDto {
   private final int actualWinStreak;
   private final int bestWinSteak;
   private final String token;
+  private String errorMsg;
+
   /**
    * Creates new UserDto using UserEntity and JWT.
    *
@@ -37,6 +39,16 @@ public class UserDto {
     this.actualWinStreak = dbEntity.getActualWinStreak();
     this.bestWinSteak = dbEntity.getBestWinSteak();
     this.token = token;
+  }
+
+  @Override
+  public String getErrorMsg() {
+    return errorMsg;
+  }
+
+  @Override
+  public void setErrorMsg(String errorMsg) {
+    this.errorMsg = errorMsg;
   }
 
   /**
@@ -131,6 +143,7 @@ public class UserDto {
     result = 31 * result + getActualWinStreak();
     result = 31 * result + getBestWinSteak();
     result = 31 * result + (getToken() != null ? getToken().hashCode() : 0);
+    result = 31 * result + (getErrorMsg() != null ? getErrorMsg().hashCode() : 0);
     return result;
   }
 
@@ -171,34 +184,11 @@ public class UserDto {
         : userDto.getLastGameResult() != null) {
       return false;
     }
-    return getToken() != null ? getToken().equals(userDto.getToken()) : userDto.getToken() == null;
-  }
-
-  @Override
-  public String toString() {
-    return "UserDto{"
-        + "name='"
-        + name
-        + '\''
-        + ", email='"
-        + email
-        + '\''
-        + ", lastGameResult='"
-        + lastGameResult
-        + '\''
-        + ", totalWins="
-        + totalWins
-        + ", totalLoses="
-        + totalLoses
-        + ", winRate="
-        + winRate
-        + ", actualWinStreak="
-        + actualWinStreak
-        + ", bestWinSteak="
-        + bestWinSteak
-        + ", token='"
-        + token
-        + '\''
-        + '}';
+    if (getToken() != null ? !getToken().equals(userDto.getToken()) : userDto.getToken() != null) {
+      return false;
+    }
+    return getErrorMsg() != null
+        ? getErrorMsg().equals(userDto.getErrorMsg())
+        : userDto.getErrorMsg() == null;
   }
 }

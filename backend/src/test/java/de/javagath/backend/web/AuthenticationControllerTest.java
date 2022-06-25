@@ -1,6 +1,7 @@
 package de.javagath.backend.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.client.ResourceAccessException;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -59,6 +61,19 @@ public class AuthenticationControllerTest {
   }
 
   @Test
+  void signUp_newNotUniqueUser_http409() throws JSONException, URISyntaxException {
+    json.put("username", "Plitochnik");
+    json.put("email", "javagath@test.com");
+    json.put("password", "crackMe");
+
+    HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
+    URI uri = new URI(baseUrl + "/signup");
+    ResponseEntity<String> response = restTemplate.postForEntity(uri, request, String.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+  }
+
+  @Test
   void login_existedUserRightPassword_http200() throws JSONException, URISyntaxException {
     json.put("login", "Plitochnik");
     json.put("password", "123456");
@@ -68,5 +83,29 @@ public class AuthenticationControllerTest {
     ResponseEntity<String> response = restTemplate.postForEntity(uri, request, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void login_existedUserWrongPassword_http401() throws JSONException, URISyntaxException {
+    json.put("login", "Plitochnik@gmail.com");
+    json.put("password", "1234567");
+
+    HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
+    URI uri = new URI(baseUrl + "/login");
+
+    assertThatThrownBy(() -> restTemplate.postForEntity(uri, request, String.class))
+        .isInstanceOf(ResourceAccessException.class);
+  }
+
+  @Test
+  void login_notExistedUser_http401() throws JSONException, URISyntaxException {
+    json.put("login", "Plitochnik11111@gmail.com");
+    json.put("password", "1234567");
+
+    HttpEntity<String> request = new HttpEntity<>(json.toString(), headers);
+    URI uri = new URI(baseUrl + "/login");
+
+    assertThatThrownBy(() -> restTemplate.postForEntity(uri, request, String.class))
+        .isInstanceOf(ResourceAccessException.class);
   }
 }

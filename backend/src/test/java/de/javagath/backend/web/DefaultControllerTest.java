@@ -33,7 +33,6 @@ public class DefaultControllerTest {
   @LocalServerPort int port;
   @Autowired private TestRestTemplate restTemplate;
   @Autowired private UserService userService;
-
   @Autowired private JwtService jwtService;
 
   @Test

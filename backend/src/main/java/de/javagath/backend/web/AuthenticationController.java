@@ -4,17 +4,22 @@ import de.javagath.backend.db.model.UserEntity;
 import de.javagath.backend.db.service.UserService;
 import de.javagath.backend.web.config.Constants;
 import de.javagath.backend.web.model.LoginDto;
+import de.javagath.backend.web.model.Response;
 import de.javagath.backend.web.model.SignUpDto;
 import de.javagath.backend.web.model.UserDto;
 import de.javagath.backend.web.service.JwtService;
 import java.lang.invoke.MethodHandles;
+import javax.persistence.NoResultException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,16 +64,29 @@ public class AuthenticationController {
    * @param singUpDto information for registration
    * @return new user
    */
-  // ToDo: Catch Exceptions
   @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UserDto> signUp(@RequestBody SignUpDto singUpDto) {
+  public ResponseEntity<Response> signUp(@RequestBody SignUpDto singUpDto) {
     LOG.debug(singUpDto.toString());
-    userService.registry(singUpDto);
-    UserEntity userEntity = userService.selectUserByLogin(singUpDto.getEmail());
-
-    ResponseEntity<UserDto> result = createSuccessfulResponse(userEntity);
-    LOG.info("New player tries to sign up. Response status: " + result.getStatusCode());
-    return result;
+    try {
+      userService.registry(singUpDto);
+      UserEntity userEntity = userService.selectUserByLogin(singUpDto.getEmail());
+      ResponseEntity<Response> result = createSuccessfulResponse(userEntity);
+      LOG.info("New player tries to sign up. Response status: " + result.getStatusCode());
+      return result;
+    } catch (ConstraintViolationException e) {
+      LOG.info(
+          "Username or Email of "
+              + singUpDto.getUsername()
+              + ", "
+              + singUpDto.getEmail()
+              + " is already registered. Please try to use unique email and username.");
+      singUpDto.setErrorMsg("Login or password does not match. Please check your input data.");
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(singUpDto);
+    } catch (Exception e) {
+      LOG.info("Registration of " + singUpDto.getUsername() + " was not successful.");
+      singUpDto.setErrorMsg("Registration was not successful. Internal server error.");
+      return ResponseEntity.internalServerError().body(singUpDto);
+    }
   }
 
   /**
@@ -77,28 +95,34 @@ public class AuthenticationController {
    * @param loginDto information for registration
    * @return authenticated user
    */
-  // ToDo: Catch Exceptions
   @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UserDto> login(@RequestBody LoginDto loginDto) {
+  public ResponseEntity<Response> login(@RequestBody LoginDto loginDto) {
     LOG.debug(loginDto.toString());
-    UserEntity userEntity = userService.selectUserByLogin(loginDto.getLogin());
-    UsernamePasswordAuthenticationToken authToken =
-        userService.createUserPasswordAuthenticationToken(
-            userEntity.getEmail(), loginDto.getPassword());
-
     try {
+      UserEntity userEntity = userService.selectUserByLogin(loginDto.getLogin());
+      UsernamePasswordAuthenticationToken authToken =
+          userService.createUserPasswordAuthenticationToken(
+              userEntity.getEmail(), loginDto.getPassword());
       authManager.authenticate(authToken);
+      ResponseEntity<Response> result = createSuccessfulResponse(userEntity);
+      LOG.info(
+          "Player "
+              + loginDto.getLogin()
+              + " successfully logged in. Response status: "
+              + result.getStatusCode());
+      return result;
+    } catch (BadCredentialsException | NoResultException e) {
+      LOG.info("Login or password from player " + loginDto.getLogin() + " does not match.");
+      loginDto.setErrorMsg("Login or password does not match. Please check your input data.");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginDto);
     } catch (Exception e) {
-      LOG.info("I GOT U!!!!!");
-      return ResponseEntity.internalServerError().body(new UserDto(userEntity, null));
+      LOG.info("Login of " + loginDto.getLogin() + " was not successful.");
+      loginDto.setErrorMsg("Login was not successful. Internal server error.");
+      return ResponseEntity.internalServerError().body(loginDto);
     }
-
-    ResponseEntity<UserDto> result = createSuccessfulResponse(userEntity);
-    LOG.info("Player tries to login. Response status: " + result.getStatusCode());
-    return result;
   }
 
-  private ResponseEntity<UserDto> createSuccessfulResponse(UserEntity userEntity) {
+  private ResponseEntity<Response> createSuccessfulResponse(UserEntity userEntity) {
     String token = jwtService.generateToken(userEntity);
     UserDto user = new UserDto(userEntity, token);
     return ResponseEntity.ok()

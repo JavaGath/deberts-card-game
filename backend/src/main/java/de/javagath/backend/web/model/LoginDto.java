@@ -7,26 +7,16 @@ package de.javagath.backend.web.model;
  * @version 1.0
  * @since 1.0
  */
-public class LoginDto {
+public class LoginDto implements Response {
 
   private String login;
   private String password;
   private String errorMsg;
 
-  /**
-   * Returns error message from the login process.
-   *
-   * @return error massage
-   */
   public String getErrorMsg() {
     return errorMsg;
   }
 
-  /**
-   * Sets error message from the login process.
-   *
-   * @param errorMsg error massage
-   */
   public void setErrorMsg(String errorMsg) {
     this.errorMsg = errorMsg;
   }
