@@ -36,16 +36,6 @@ public class DefaultControllerTest {
   @Autowired private JwtService jwtService;
 
   @Test
-  void index_callOfIndexPageWithoutJWT_http401() throws URISyntaxException {
-    String baseUrl = "http://localhost:" + port + "/";
-
-    URI uri = new URI(baseUrl);
-    ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-  }
-
-  @Test
   void index_callOfIndexPageWithJWT_http200() throws URISyntaxException {
     String baseUrl = "http://localhost:" + port + "/";
     String email = "Plitochnik@gmail.com";
@@ -78,22 +68,5 @@ public class DefaultControllerTest {
         restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
-  @Test
-  void index_callOfIndexPageWithNoTypeToken_http401() throws URISyntaxException {
-    String baseUrl = "http://localhost:" + port + "/";
-    String email = "Plitochnik@gmail.com";
-
-    UserEntity selectedEntity = userService.selectUserByLogin(email);
-    String tokenInHeader = jwtService.generateToken(selectedEntity);
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(Constants.AUTH_HEADER, tokenInHeader);
-    HttpEntity<Object> entity = new HttpEntity<>(headers);
-    URI uri = new URI(baseUrl);
-    ResponseEntity<String> response =
-        restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
   }
 }
