@@ -29,13 +29,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem('user')
-  console.log(loggedIn)
-  // if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
   if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
-    console.log('Am i here?')
     next({ name: 'login' })
   }
-
   next()
 })
 

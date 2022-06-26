@@ -29,6 +29,7 @@
 
 <script>
 import BaseInput from '@/components/BaseInput'
+import DebertsService from '@/services/DebertsService'
 
 export default {
   name: 'LoginForm',
@@ -56,7 +57,6 @@ export default {
       ) {
         this.error.login = 'Login must be between 6 and 50 characters long.'
         this.error.counter++
-        return
       } else {
         this.error.login = ''
         this.error.counter = 0
@@ -65,9 +65,16 @@ export default {
     login() {
       this.checkLogin()
       if (this.error.counter === 0) {
-        this.$store.dispatch('login', this.registrationData).then(() => {
-          this.error.username = ''
-          this.$router.push({ name: 'home' })
+        DebertsService.login(this.registrationData).then(({ data }) => {
+          if (data.errorMsg === null || data.errorMsg === '') {
+            this.error.login = ''
+            this.error.counter = 0
+            this.$store.dispatch('login', data)
+            this.$router.push({ name: 'home' })
+          } else {
+            this.error.login = data.errorMsg
+            this.error.counter++
+          }
         })
       }
     }

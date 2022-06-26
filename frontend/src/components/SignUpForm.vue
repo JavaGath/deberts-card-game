@@ -41,6 +41,7 @@
 
 <script>
 import BaseInput from '@/components/BaseInput'
+import DebertsService from '@/services/DebertsService'
 
 export default {
   name: 'RegistryForm',
@@ -83,7 +84,6 @@ export default {
       ) {
         this.error.email = 'Email must be between 6 and 50 characters long.'
         this.error.counter++
-        return
       } else {
         this.error.email = ''
         this.error.counter = 0
@@ -106,6 +106,7 @@ export default {
         this.error.counter++
       } else {
         this.error.username = ''
+        this.error.email = ''
         this.error.counter = 0
       }
     },
@@ -114,9 +115,17 @@ export default {
       this.checkPassword()
       this.checkEmail()
       if (this.error.counter === 0) {
-        this.$store.dispatch('signup', this.registrationData).then(() => {
-          this.error.username = ''
-          this.$router.push({ name: 'home' })
+        DebertsService.signUp(this.registrationData).then(({ data }) => {
+          if (data.errorMsg === null || data.errorMsg === '') {
+            this.error.username = ''
+            this.error.email = ''
+            this.error.counter = 0
+            this.$store.dispatch('login', data)
+            this.$router.push({ name: 'home' })
+          } else {
+            this.error.email = data.errorMsg
+            this.error.counter++
+          }
         })
       }
     }

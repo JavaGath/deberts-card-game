@@ -1,5 +1,4 @@
 import { createStore } from 'vuex'
-import DebertsService from '@/services/DebertsService'
 import axios from 'axios'
 
 export default createStore({
@@ -8,10 +7,24 @@ export default createStore({
   },
   getters: {
     loggedIn(state) {
-      return state.user.name !== ''
+      return (
+        state.user.name !== '' ||
+        (localStorage.getItem('user') !== '' &&
+          localStorage.getItem('user') !== null)
+      )
     },
     username(state) {
-      return state.user.name
+      if (state.user.name !== '') {
+        return state.user.name
+      } else if (
+        localStorage.getItem('user') !== '' &&
+        localStorage.getItem('user') !== null
+      ) {
+        const result = JSON.parse(localStorage.getItem('user'))
+        return result.name
+      } else {
+        return ''
+      }
     }
   },
   mutations: {
@@ -28,15 +41,8 @@ export default createStore({
     }
   },
   actions: {
-    signup({ commit }, credentials) {
-      return DebertsService.signUp(credentials).then(({ data }) => {
-        commit('SET_USER_DATA', data)
-      })
-    },
     login({ commit }, credentials) {
-      return DebertsService.login(credentials).then(({ data }) => {
-        commit('SET_USER_DATA', data)
-      })
+      return commit('SET_USER_DATA', credentials)
     },
     logout({ commit }) {
       commit('CLEAR_USER_DATA')

@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -82,6 +83,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         .permitAll()
         .anyRequest()
         .authenticated()
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
         .and()
         .addFilterAfter(historyModeFilter, FilterSecurityInterceptor.class)
         .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

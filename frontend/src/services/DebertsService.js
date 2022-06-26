@@ -10,9 +10,17 @@ const apiClient = axios.create({
 
 export default {
   signUp(body) {
-    return apiClient.post('api/auth/signup', body)
+    return apiClient.post('api/auth/signup', body).catch(function (error) {
+      if (error.response.status === 409 || error.response.status === 500) {
+        return error.response
+      }
+    })
   },
   login(body) {
-    return apiClient.post('api/auth/login', body)
+    return apiClient.post('api/auth/login', body).catch(function (error) {
+      if (error.response.status === 401 || error.response.status === 500) {
+        return error.response
+      }
+    })
   }
 }

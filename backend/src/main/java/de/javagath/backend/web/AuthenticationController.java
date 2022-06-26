@@ -80,7 +80,8 @@ public class AuthenticationController {
               + ", "
               + singUpDto.getEmail()
               + " is already registered. Please try to use unique email and username.");
-      singUpDto.setErrorMsg("Login or password does not match. Please check your input data.");
+      singUpDto.setErrorMsg(
+          "Username or Email is already registered. Please try to use unique email and username.");
       return ResponseEntity.status(HttpStatus.CONFLICT).body(singUpDto);
     } catch (Exception e) {
       LOG.info("Registration of " + singUpDto.getUsername() + " was not successful.");
