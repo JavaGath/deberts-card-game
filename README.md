@@ -117,6 +117,8 @@ After that we have to generate a certificate for the public key
     - JWT Authentication ---> JwtTokenFilter.java
     - HistoryMode for embedded tomcat ---> HistoryModeFilter.java
     - Store Passwords in DB using BCrypt, Salt and Pepper ---> UserService,java
+    - Redirect to login-page using exception ---> WebSecurity.java (
+      LoginUrlAuthenticationEntryPoint)
 - General
     - MVN + Vue ---> pom.xml
     - State Pattern ---> Phase.java, Action.java, Combo.java, Trade.java
