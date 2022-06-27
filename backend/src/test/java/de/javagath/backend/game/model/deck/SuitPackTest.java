@@ -9,8 +9,10 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-unittest.properties")
 class SuitPackTest {
 
   private SuitPack firstSuitPack;

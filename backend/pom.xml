@@ -4,6 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>backend</artifactId>
 
+
   <build>
     <finalName>deberts-card-game</finalName>
     <plugins>
@@ -19,15 +20,19 @@
         </configuration>
         <groupId>org.springframework.boot</groupId>
       </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>18</source>
+          <target>18</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
     </plugins>
   </build>
 
-  <dependencies>
-    <dependency>
-      <artifactId>spring-boot-starter</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
 
+  <dependencies>
     <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <groupId>org.springframework.boot</groupId>
@@ -36,6 +41,11 @@
 
     <dependency>
       <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-starter-security</artifactId>
       <groupId>org.springframework.boot</groupId>
     </dependency>
 
@@ -57,6 +67,13 @@
     <dependency>
       <artifactId>postgresql</artifactId>
       <groupId>org.postgresql</groupId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <artifactId>h2</artifactId>
+      <groupId>com.h2database</groupId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -68,7 +85,24 @@
     <dependency>
       <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
       <groupId>org.assertj</groupId>
-      <version>2.2.0</version>
+      <version>${assertjVersion}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-api</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <version>${jjwtVersion}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-impl</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+      <scope>runtime</scope>
+      <version>${jjwtVersion}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-jackson</artifactId>
+      <groupId>io.jsonwebtoken</groupId> <!-- or jjwt-gson if Gson is preferred -->
+      <scope>runtime</scope>
+      <version>${jjwtVersion}</version>
     </dependency>
 
     <dependency>
@@ -76,6 +110,7 @@
       <groupId>org.projectlombok</groupId>
       <optional>true</optional>
     </dependency>
+
   </dependencies>
   <description>backend</description>
   <modelVersion>4.0.0</modelVersion>
@@ -89,13 +124,6 @@
     <version>1.0</version>
   </parent>
 
-  <properties>
-    <java.version>17</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <slf4jVersion>1.7.33</slf4jVersion>
-  </properties>
-
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
 
 </project>

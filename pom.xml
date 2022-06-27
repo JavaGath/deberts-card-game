@@ -5,10 +5,23 @@
 
 
   <artifactId>deberts-card-game</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>18</source>
+          <target>18</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+    </plugins>
+  </build>
   <description>Deberts project based on spring-boot and vue.js</description>
   <groupId>de.java-gath</groupId>
   <modelVersion>4.0.0</modelVersion>
   <modules>
+    <module>frontend</module>
     <module>backend</module>
   </modules>
 
@@ -18,13 +31,23 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>2.5.6</version>
+    <version>2.6.7</version>
   </parent>
 
   <properties>
+    <assertjVersion>2.2.0</assertjVersion>
+    <execVersion>3.0.0</execVersion>
+    <frontendpluginVersion>1.11.2</frontendpluginVersion>
+    <java.version>18</java.version>
+    <jjwtVersion>0.11.5</jjwtVersion>
     <main.basedir>${project.basedir}</main.basedir>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>18</maven.compiler.source>
+    <maven.compiler.target>18</maven.compiler.target>
+    <modelVersion>4.0.0</modelVersion>
+    <nodeVersion>v17.9.0</nodeVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <slf4jVersion>1.7.36</slf4jVersion>
   </properties>
 
   <version>1.0</version>

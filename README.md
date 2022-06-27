@@ -63,6 +63,34 @@ kubectl apply -f deberts-game.yaml
 kubectl get pods -o wide  
 ```
 
+### Keystore
+
+To generate Keystore with private key:
+
+```
+keytool -genkey -alias debertskey -keyalg RSA -keystore deberts.jks -keysize 2048
+```
+
+<br>CN=Ievgenii Izrailtenko
+<br>OU=JavaGath
+<br>O=JavaGathOrg
+<br>L=Erkrath
+<br>ST=NRW
+<br>C=DE
+<br>Password=deberts123
+
+After that we have to generate a certificate for the public key
+
+#### HTTPS
+
+We need to generate a keypair
+
+```
+keytool -genkeypair -alias debertskeypair -keyalg RSA -keysize 4096 -storetype JKS -keystore deberts.jks -validity 3650
+```
+
+After that we can use it to enable https
+
 ### Actual ToDo's:
 
 1. ~~Run project using docker~~
@@ -75,12 +103,34 @@ kubectl get pods -o wide
 8. ~~Action Phase~~
 9. ~~Round sum up~~
 10. ~~Party~~
-11. DB-Schema
-12. Login
-13. Save/Load
-14. MVN-Infrastructure Frontend
+11. ~~MVN-Infrastructure Frontend~~
+12. ~~Security~~
+13. DB-Schema
+14. Save/Load
 15. Frontend
     1. Vue Part
     2. Rest Controller
 
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=javagath)](https://github.com/anuraghazra/github-readme-stats)
+### Useful topics:
+
+- Testing
+    - Test ---> CardTest.java
+    - ParameterizedTest CSV ---> CardTest.java
+    - ParameterizedTest EnumSource ---> CardTest.java
+    - ControllerTest Get ---> DefaultControllerTest.java
+    - ControllerTest Get with Headers ---> DefaultControllerTest.java
+    - ControllerTest Post ---> AuthenticationControllerTest.java
+    - Test Postgres via H2 ---> UserServiceTest.java + application-unittest.properties
+- Security
+    - JWT Creation, Validation etc ---> JwtService.java
+    - JWT Security Config (whitelisting, stateless, without basic auth) ---> WebSecurity.java
+    - JWT Authentication ---> JwtTokenFilter.java
+    - HistoryMode for embedded tomcat ---> HistoryModeFilter.java
+    - Store Passwords in DB using BCrypt, Salt and Pepper ---> UserService,java
+    - Redirect to login-page using exception ---> WebSecurity.java (
+      LoginUrlAuthenticationEntryPoint)
+- General
+    - MVN + Vue ---> pom.xml
+    - State Pattern ---> Phase.java, Action.java, Combo.java, Trade.java
+
+      [![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=javagath)](https://github.com/anuraghazra/github-readme-stats)

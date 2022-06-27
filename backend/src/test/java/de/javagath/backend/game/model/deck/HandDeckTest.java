@@ -9,9 +9,11 @@ import de.javagath.backend.game.model.enums.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 @SuppressWarnings("javadoc")
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-unittest.properties")
 public class HandDeckTest {
 
   Deck firstDeck;
