@@ -19,9 +19,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 @SuppressWarnings("javadoc")
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-unittest.properties")
 public class RoundTest {
 
   @Test

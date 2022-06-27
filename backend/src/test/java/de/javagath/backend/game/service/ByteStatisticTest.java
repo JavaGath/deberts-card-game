@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 @SuppressWarnings("javadoc")
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-unittest.properties")
 public class ByteStatisticTest {
 
   ByteStatistic newByteStatistic;
