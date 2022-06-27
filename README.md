@@ -81,6 +81,16 @@ keytool -genkey -alias debertskey -keyalg RSA -keystore deberts.jks -keysize 204
 
 After that we have to generate a certificate for the public key
 
+#### HTTPS
+
+We need to generate a keypair
+
+```
+keytool -genkeypair -alias debertskeypair -keyalg RSA -keysize 4096 -storetype JKS -keystore deberts.jks -validity 3650
+```
+
+After that we can use it to enable https
+
 ### Actual ToDo's:
 
 1. ~~Run project using docker~~
