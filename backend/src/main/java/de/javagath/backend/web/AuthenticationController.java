@@ -70,6 +70,10 @@ public class AuthenticationController {
     try {
       userService.registry(singUpDto);
       UserEntity userEntity = userService.selectUserByLogin(singUpDto.getEmail());
+      UsernamePasswordAuthenticationToken authToken =
+          userService.createUserPasswordAuthenticationToken(
+              userEntity.getEmail(), singUpDto.getPassword());
+      authManager.authenticate(authToken);
       ResponseEntity<Response> result = createSuccessfulResponse(userEntity);
       LOG.info("New player tries to sign up. Response status: " + result.getStatusCode());
       return result;
