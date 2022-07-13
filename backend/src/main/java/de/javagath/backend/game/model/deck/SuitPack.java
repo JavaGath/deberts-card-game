@@ -24,11 +24,11 @@ class SuitPack {
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
   private final Set<Card> cards;
-  private int activeCars;
+  private int activeCardsNumber;
 
   private SuitPack() {
     cards = new HashSet<>();
-    activeCars = 0;
+    activeCardsNumber = 0;
   }
 
   /**
@@ -51,7 +51,7 @@ class SuitPack {
           "Card: " + card + " with value: " + card.getValue() + " is already in the SuitPack");
     }
     cards.add(card);
-    activeCars++;
+    activeCardsNumber++;
     LOG.debug("Added Card: {}", card);
   }
 
@@ -63,7 +63,7 @@ class SuitPack {
    * @return {@code true} if this {@code SuitPack} contains {@code Card}, {@code false} otherwise
    */
   boolean contains(Value value) {
-    if (activeCars == 0) {
+    if (activeCardsNumber == 0) {
       return false;
     }
 
@@ -76,7 +76,7 @@ class SuitPack {
   }
 
   private boolean checkPresence(Value value) {
-    if (activeCars == 0) {
+    if (activeCardsNumber == 0) {
       return false;
     }
 
@@ -95,7 +95,7 @@ class SuitPack {
    * @return {@code true} if {@code SuitPack} has active {@code Card}, {@code false} otherwise
    */
   boolean isEmpty() {
-    return activeCars == 0;
+    return activeCardsNumber == 0;
   }
 
   /**
@@ -104,7 +104,7 @@ class SuitPack {
    * @return number of {@code Cards}
    */
   int getActiveCards() {
-    return activeCars;
+    return activeCardsNumber;
   }
 
   /**
@@ -120,7 +120,7 @@ class SuitPack {
           LOG.debug("Dealt Card: {}", deckCard);
           var dealtCard = Card.newInstance(deckCard);
           deckCard.setActive(false);
-          activeCars--;
+          activeCardsNumber--;
           return dealtCard;
         }
       }
@@ -141,7 +141,7 @@ class SuitPack {
       var dealtCard = Card.newInstance(activeCards.get(cardIndex));
       LOG.debug("Dealt Card: {}", dealtCard);
       deckCard.setActive(false);
-      activeCars--;
+      activeCardsNumber--;
       return dealtCard;
     }
     throw new NoSuchElementException("Deck does not contain any cards");
@@ -153,10 +153,10 @@ class SuitPack {
    * <p>Each contained {@code Card} is active.
    */
   void resetPack() {
-    activeCars = 0;
+    activeCardsNumber = 0;
     for (Card deckCard : cards) {
       deckCard.setActive(true);
-      activeCars++;
+      activeCardsNumber++;
     }
     LOG.debug("SuitPack reset");
   }
@@ -164,7 +164,7 @@ class SuitPack {
   @Override
   public int hashCode() {
     int result = cards.hashCode();
-    result = 31 * result + activeCars;
+    result = 31 * result + activeCardsNumber;
     return result;
   }
 
@@ -179,7 +179,7 @@ class SuitPack {
 
     SuitPack suitPack = (SuitPack) o;
 
-    if (activeCars != suitPack.activeCars) {
+    if (activeCardsNumber != suitPack.activeCardsNumber) {
       return false;
     }
     return cards.equals(suitPack.cards);
@@ -187,6 +187,6 @@ class SuitPack {
 
   @Override
   public String toString() {
-    return "SuitPack{" + "cards=" + cards + ", activeCars=" + activeCars + '}';
+    return "SuitPack{" + "cards=" + cards + ", activeCars=" + activeCardsNumber + '}';
   }
 }
