@@ -277,7 +277,7 @@ public class RoundInformation {
   private void playOwnTrump(Suit suit, Owner trumpPicker) {
     Card newTrumpCard;
     try {
-      newTrumpCard = cardDeck.dealRandomCardFromSuit(suit);
+      newTrumpCard = cardDeck.dealRandomCardFromSuit(suit, true);
     } catch (NoSuchElementException e) {
       newTrumpCard = Card.newInstance(suit, Value.ACE);
     }

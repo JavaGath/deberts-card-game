@@ -63,12 +63,14 @@ public interface Deck {
   Card dealRandomCard();
 
   /**
-   * Returns a random {@code Card} from the specified suit of the {@code Deck}.
+   * Returns a random {@code Card} from the specified suit of the {@code Deck}. If it should be a
+   * pick of trump this method returns Ace instead of exception.
    *
    * @param suit {@code Suit} to get a {@code Card}
+   * @param isTrumpPick if active returns a trump ace if the deck is empty
    * @return a random {@code Card} from the {@code Suit}
    */
-  Card dealRandomCardFromSuit(Suit suit);
+  Card dealRandomCardFromSuit(Suit suit, boolean isTrumpPick);
 
   /** Resets a {@code Deck} to its init values. */
   void resetDeck();

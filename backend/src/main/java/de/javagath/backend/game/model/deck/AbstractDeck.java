@@ -65,22 +65,30 @@ public abstract class AbstractDeck implements Deck {
       LOG.debug("FullSuits: {}", fullSuits);
       var suitIndex = new Random().nextInt(fullSuits.size());
       Suit suit = fullSuits.get(suitIndex);
-      var suitPack = suitMap.get(suit);
-      LOG.debug("SuitIndex: {}, SuitPack: {}", suitIndex, suitPack);
-      Card cardToDeal = suitPack.dealRandomCard();
-      if (suitPack.isEmpty()) {
-        fullSuits.remove(suit);
-      }
-      containedCards--;
-      return cardToDeal;
+      return handeRandomCardDeal(suit);
     } catch (IllegalArgumentException e) {
       throw new NoSuchElementException("Deck does not contain any cards");
     }
   }
 
   @Override
-  public Card dealRandomCardFromSuit(Suit suit) {
-    return suitMap.get(suit).dealRandomCard();
+  public Card dealRandomCardFromSuit(Suit suit, boolean isTrumpPick) {
+    if (!isTrumpPick) {
+      return handeRandomCardDeal(suit);
+    } else {
+      Card cardToDeal;
+      try {
+        cardToDeal = handeRandomCardDeal(suit);
+        if (cardToDeal == null) {
+          cardToDeal = Card.newInstance(suit, Value.ACE);
+          fullSuits.remove(suit);
+        }
+      } catch (Exception e) {
+        cardToDeal = Card.newInstance(suit, Value.ACE);
+        fullSuits.remove(suit);
+      }
+      return cardToDeal;
+    }
   }
 
   @Override
@@ -103,6 +111,16 @@ public abstract class AbstractDeck implements Deck {
   @Override
   public boolean isEmpty() {
     return fullSuits.isEmpty();
+  }
+
+  private Card handeRandomCardDeal(Suit suit) {
+    var suitPack = suitMap.get(suit);
+    Card cardToDeal = suitPack.dealRandomCard();
+    containedCards--;
+    if (suitPack.isEmpty()) {
+      fullSuits.remove(suit);
+    }
+    return cardToDeal;
   }
 
   @Override

@@ -146,17 +146,27 @@ class CardDeckTest {
   @Test
   void dealRandomCardFromSuit_newCardDeckDealAllCardsFromSuit_throwsNoSuchElementException() {
     for (int i = 0; i < 8; i++) {
-      firstDeck.dealRandomCardFromSuit(Suit.DIAMONDS);
+      firstDeck.dealRandomCardFromSuit(Suit.DIAMONDS, false);
     }
 
-    assertThatThrownBy(() -> firstDeck.dealRandomCardFromSuit(Suit.DIAMONDS))
+    assertThatThrownBy(() -> firstDeck.dealRandomCardFromSuit(Suit.DIAMONDS, false))
         .isInstanceOf(NoSuchElementException.class);
   }
 
   @Test
+  void
+      dealRandomCardFromSuit_newCardDeckDealAllCardsFromSuitAndPickTrump_throwsNoSuchElementException() {
+    for (int i = 0; i < 8; i++) {
+      firstDeck.dealRandomCardFromSuit(Suit.DIAMONDS, false);
+    }
+
+    assertThat(firstDeck.dealRandomCardFromSuit(Suit.DIAMONDS, true)).isInstanceOf(Card.class);
+  }
+
+  @Test
   void dealRandomCardFromSuit_newCardDeckDeal2SpadesCards_deal2SpadesCards() {
-    Card firstCard = firstDeck.dealRandomCardFromSuit(Suit.SPADES);
-    Card secondCard = firstDeck.dealRandomCardFromSuit(Suit.SPADES);
+    Card firstCard = firstDeck.dealRandomCardFromSuit(Suit.SPADES, false);
+    Card secondCard = firstDeck.dealRandomCardFromSuit(Suit.SPADES, false);
 
     assertThat(firstCard.getSuit()).isEqualTo(secondCard.getSuit()).isEqualTo(Suit.SPADES);
   }
