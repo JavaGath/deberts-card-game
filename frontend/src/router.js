@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './views/HomeView.vue'
+import NotFoundView from './views/NotFoundView'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/signup',
     name: 'signUp',
     component: () => import('./views/SignUpView.vue')
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'notFound',
+    component: NotFoundView
   }
 ]
 
