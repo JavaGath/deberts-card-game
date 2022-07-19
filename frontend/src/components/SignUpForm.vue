@@ -116,7 +116,7 @@ export default {
       this.checkEmail()
       if (this.error.counter === 0) {
         DebertsService.signUp(this.registrationData).then(({ data }) => {
-          if (data.errorMsg === null || data.errorMsg === '') {
+          if (data == null || data.errorMsg === null || data.errorMsg === '') {
             this.error.username = ''
             this.error.email = ''
             this.error.counter = 0

@@ -1,15 +1,15 @@
 <template>
   <div>
     <NavBar
-        :html-type="'header'"
-        :right-menu="rightMenuTop"
-        class="top"
+      :html-type="'header'"
+      :right-menu="rightMenuTop"
+      class="top"
     ></NavBar>
     <h1>Page is not found, try again!</h1>
     <NavBar
-        :html-type="'footer'"
-        :right-menu="rightMenuBot"
-        class="navbar bot"
+      :html-type="'footer'"
+      :right-menu="rightMenuBot"
+      class="navbar bot"
     ></NavBar>
   </div>
 </template>
